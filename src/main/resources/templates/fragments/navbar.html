@@ -1,0 +1,31 @@
+    <!-- Navbar -->
+    <nav th:fragment="navbarFragment" class="navbar navbar-expand-lg navbar-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <i class="bi bi-compass"></i> AddVenture
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/}">Inicio</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/about}">¿Cómo funciona?</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/explore}">Explora viajes</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" th:href="@{/create}">Crea tu grupo</a>
+                    </li>
+                </ul>
+                <div class="d-flex">
+                    <button class="btn btn-outline-light me-2" data-bs-toggle="modal" data-bs-target="#loginModal">Iniciar sesión</button>
+                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#registerModal">Regístrate</button>
+                </div>
+            </div>
+        </div>
+    </nav>

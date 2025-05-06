@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AddVenture - Encuentra compañeros de viaje</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav th:replace="~{/fragments/navbar :: navbarFragment}"></nav>
+
+    <!-- Hero Section -->
+    <header class="hero-section">
+        <div class="container text-center text-white">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <h1 class="display-4 fw-bold mb-4 animate__animated animate__fadeInDown">Nunca viajes solo de nuevo</h1>
+                    <p class="lead mb-5 animate__animated animate__fadeInUp">Encuentra compañeros de viaje con intereses similares y crea experiencias inolvidables juntos</p>
+                    <div class="animate__animated animate__fadeInUp animate__delay-1s">
+                        <a th:href="@{/explore}" class="btn btn-primary btn-lg me-3">Explorar viajes</a>
+                        <a th:href="@{/create}" class="btn btn-outline-light btn-lg">Crear grupo</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="overlay"></div>
+    </header>
+
+    <!-- Features Section -->
+    <section class="py-5">
+        <div class="container">
+            <div class="row text-center">
+                <div class="col-12">
+                    <h2 class="section-title">¿Por qué elegir AddVenture?</h2>
+                </div>
+            </div>
+            <div class="row mt-5">
+                <div class="col-md-4 mb-4">
+                    <div class="feature-card">
+                        <div class="icon-wrapper">
+                            <i class="bi bi-people-fill"></i>
+                        </div>
+                        <h3>Comunidad de viajeros</h3>
+                        <p>Conéctate con personas que comparten tus mismas pasiones y descubre nuevos destinos juntos.</p>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="feature-card">
+                        <div class="icon-wrapper">
+                            <i class="bi bi-shield-check"></i>
+                        </div>
+                        <h3>Viajes seguros</h3>
+                        <p>Perfiles verificados y sistema de reseñas para que puedas viajar con total tranquilidad.</p>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="feature-card">
+                        <div class="icon-wrapper">
+                            <i class="bi bi-cash-coin"></i>
+                        </div>
+                        <h3>Ahorra en gastos</h3>
+                        <p>Comparte gastos de alojamiento, transporte y actividades para hacer tu viaje más económico.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Popular Destinations -->
+    <section class="py-5 bg-light">
+        <div class="container">
+            <div class="row text-center">
+                <div class="col-12">
+                    <h2 class="section-title">Destinos populares</h2>
+                    <p class="section-subtitle">Descubre los lugares más buscados por nuestra comunidad</p>
+                </div>
+            </div>
+            <div class="row mt-4">
+                <div class="col-md-4 mb-4">
+                    <div class="destination-card">
+                        <div class="destination-img" style="background-image: url('https://source.unsplash.com/random/600x400/?barcelona');">
+                            <div class="destination-overlay">
+                                <h3>Barcelona</h3>
+                                <span>12 grupos activos</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="destination-card">
+                        <div class="destination-img" style="background-image: url('https://source.unsplash.com/random/600x400/?tokyo');">
+                            <div class="destination-overlay">
+                                <h3>Tokio</h3>
+                                <span>8 grupos activos</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="destination-card">
+                        <div class="destination-img" style="background-image: url('https://source.unsplash.com/random/600x400/?peru');">
+                            <div class="destination-overlay">
+                                <h3>Perú</h3>
+                                <span>15 grupos activos</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="text-center mt-4">
+                <a th:href="@{/explore}" class="btn btn-primary">Ver todos los destinos</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="py-5">
+        <div class="container">
+            <div class="row text-center">
+                <div class="col-12">
+                    <h2 class="section-title">Experiencias de viajeros</h2>
+                </div>
+            </div>
+            <div class="row mt-4">
+                <div class="col-md-4 mb-4">
+                    <div class="testimonial-card">
+                        <div class="testimonial-img">
+                            <img src="https://randomuser.me/api/portraits/women/32.jpg" alt="Testimonial">
+                        </div>
+                        <div class="testimonial-content">
+                            <p>"Gracias a AddVenture conocí a mis mejores amigos durante un viaje a Tailandia. ¡Una experiencia increíble!"</p>
+                            <h4>Laura Martínez</h4>
+                            <span>Madrid, España</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="testimonial-card">
+                        <div class="testimonial-img">
+                            <img src="https://randomuser.me/api/portraits/men/45.jpg" alt="Testimonial">
+                        </div>
+                        <div class="testimonial-content">
+                            <p>"Nunca me había animado a viajar solo, pero con AddVenture encontré un grupo genial para recorrer Japón."</p>
+                            <h4>Carlos Rodríguez</h4>
+                            <span>Buenos Aires, Argentina</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="testimonial-card">
+                        <div class="testimonial-img">
+                            <img src="https://randomuser.me/api/portraits/women/68.jpg" alt="Testimonial">
+                        </div>
+                        <div class="testimonial-content">
+                            <p>"He organizado 3 viajes con personas de la plataforma y todas las experiencias han sido maravillosas."</p>
+                            <h4>Ana López</h4>
+                            <span>Ciudad de México, México</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section py-5">
+        <div class="container text-center text-white">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <h2 class="mb-4">¿Listo para tu próxima aventura?</h2>
+                    <p class="lead mb-4">Únete a nuestra comunidad de viajeros y comienza a planificar tu próximo viaje</p>
+                    <button class="btn btn-light btn-lg" data-bs-toggle="modal" data-bs-target="#registerModal">Regístrate ahora</button>
+                </div>
+            </div>
+        </div>
+        <div class="overlay"></div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer py-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 mb-4 mb-lg-0">
+                    <h5><i class="bi bi-compass"></i> AddVenture</h5>
+                    <p>Conectamos viajeros con intereses similares para crear experiencias inolvidables.</p>
+                    <div class="social-icons">
+                        <a href="#"><i class="bi bi-facebook"></i></a>
+                        <a href="#"><i class="bi bi-instagram"></i></a>
+                        <a href="#"><i class="bi bi-twitter"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-4 mb-4 mb-md-0">
+                    <h5>Enlaces</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="index.html">Inicio</a></li>
+                        <li><a href="how-it-works.html">¿Cómo funciona?</a></li>
+                        <li><a href="explore-trips.html">Explora viajes</a></li>
+                        <li><a href="create-group.html">Crea tu grupo</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-2 col-md-4 mb-4 mb-md-0">
+                    <h5>Recursos</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#">Blog de viajes</a></li>
+                        <li><a href="#">Guías de destinos</a></li>
+                        <li><a href="#">Consejos de seguridad</a></li>
+                        <li><a href="#">Preguntas frecuentes</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-4 col-md-4">
+                    <h5>Suscríbete</h5>
+                    <p>Recibe las últimas novedades y ofertas especiales</p>
+                    <form class="newsletter-form">
+                        <div class="input-group mb-3">
+                            <input type="email" class="form-control" placeholder="Tu email" required>
+                            <button class="btn btn-primary" type="submit">Suscribir</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <hr class="mt-4">
+            <div class="row">
+                <div class="col-md-6 text-center text-md-start">
+                    <p class="mb-0">&copy; 2023 AddVenture. Todos los derechos reservados.</p>
+                </div>
+                <div class="col-md-6 text-center text-md-end">
+                    <ul class="list-inline mb-0">
+                        <li class="list-inline-item"><a href="#">Términos y condiciones</a></li>
+                        <li class="list-inline-item"><a href="#">Política de privacidad</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Login Modal -->
+    <div class="modal fade" id="loginModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Iniciar sesión</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="loginForm">
+                        <div class="mb-3">
+                            <label for="loginEmail" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="loginEmail" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="loginPassword" class="form-label">Contraseña</label>
+                            <input type="password" class="form-control" id="loginPassword" required>
+                        </div>
+                        <div class="mb-3 form-check">
+                            <input type="checkbox" class="form-check-input" id="rememberMe">
+                            <label class="form-check-label" for="rememberMe">Recordarme</label>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Iniciar sesión</button>
+                    </form>
+                    <div class="text-center mt-3">
+                        <a href="#" class="text-decoration-none">¿Olvidaste tu contraseña?</a>
+                    </div>
+                    <hr>
+                    <div class="text-center">
+                        <p>¿No tienes cuenta?</p>
+                        <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#registerModal" data-bs-dismiss="modal">Regístrate</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Register Modal -->
+    <div class="modal fade" id="registerModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Regístrate</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="registerForm">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="firstName" class="form-label">Nombre</label>
+                                <input type="text" class="form-control" id="firstName" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="lastName" class="form-label">Apellido</label>
+                                <input type="text" class="form-control" id="lastName" required>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="registerEmail" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="registerEmail" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="registerPassword" class="form-label">Contraseña</label>
+                            <input type="password" class="form-control" id="registerPassword" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="confirmPassword" class="form-label">Confirmar contraseña</label>
+                            <input type="password" class="form-control" id="confirmPassword" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Intereses de viaje (selecciona al menos 3)</label>
+                            <div class="d-flex flex-wrap gap-2">
+                                <div class="form-check">
+                                    <input class="form-check-input interest-check" type="checkbox" id="adventure">
+                                    <label class="form-check-label" for="adventure">Aventura</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input interest-check" type="checkbox" id="culture">
+                                    <label class="form-check-label" for="culture">Cultura</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input interest-check" type="checkbox" id="beach">
+                                    <label class="form-check-label" for="beach">Playa</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input interest-check" type="checkbox" id="gastronomy">
+                                    <label class="form-check-label" for="gastronomy">Gastronomía</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input interest-check" type="checkbox" id="nature">
+                                    <label class="form-check-label" for="nature">Naturaleza</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input interest-check" type="checkbox" id="photography">
+                                    <label class="form-check-label" for="photography">Fotografía</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3 form-check">
+                            <input type="checkbox" class="form-check-input" id="termsCheck" required>
+                            <label class="form-check-label" for="termsCheck">Acepto los <a href="#">términos y condiciones</a></label>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Crear cuenta</button>
+                    </form>
+                    <hr>
+                    <div class="text-center">
+                        <p>¿Ya tienes cuenta?</p>
+                        <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#loginModal" data-bs-dismiss="modal">Iniciar sesión</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script th:src="@{/js/main.js}"></script>
+</body>
+</html>

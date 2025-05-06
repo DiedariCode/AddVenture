@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crea tu grupo - AddVenture</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav th:replace="~{/fragments/navbar :: navbarFragment}"></nav>
+
+
+    <!-- Page Header -->
+    <header class="page-header">
+        <div class="container text-center text-white">
+            <h1 class="display-4 fw-bold">Crea tu grupo de viaje</h1>
+            <p class="lead">Propón un destino y encuentra compañeros con intereses similares</p>
+        </div>
+        <div class="overlay"></div>
+    </header>
+
+    <!-- Create Group Form -->
+    <section class="py-5">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-10">
+                    <div class="card shadow-sm">
+                        <div class="card-body p-lg-5">
+                            <h2 class="card-title text-center mb-4">Detalles del viaje</h2>
+
+                            <form id="createGroupForm">
+                                <!-- Trip Title -->
+                                <div class="mb-4">
+                                    <label for="tripTitle" class="form-label">Título del viaje</label>
+                                    <input type="text" class="form-control" id="tripTitle"
+                                        placeholder="Ej: Ruta por el norte de Italia" required>
+                                    <div class="form-text">Elige un título atractivo que describa la esencia de tu
+                                        viaje.</div>
+                                </div>
+
+                                <!-- Trip Destination -->
+                                <div class="row mb-4">
+                                    <div class="col-md-6 mb-3 mb-md-0">
+                                        <label for="destination" class="form-label">Destino principal</label>
+                                        <input type="text" class="form-control" id="destination"
+                                            placeholder="Ej: Barcelona, España" required>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="tripType" class="form-label">Tipo de viaje</label>
+                                        <select class="form-select" id="tripType" required>
+                                            <option value="" selected disabled>Selecciona una opción</option>
+                                            <option value="aventura">Aventura</option>
+                                            <option value="cultura">Cultura</option>
+                                            <option value="playa">Playa</option>
+                                            <option value="gastronomia">Gastronomía</option>
+                                            <option value="naturaleza">Naturaleza</option>
+                                            <option value="urbano">Urbano</option>
+                                            <option value="relax">Relax</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <!-- Trip Dates -->
+                                <div class="row mb-4">
+                                    <div class="col-md-6 mb-3 mb-md-0">
+                                        <label for="startDate" class="form-label">Fecha de inicio</label>
+                                        <input type="date" class="form-control" id="startDate" required>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="endDate" class="form-label">Fecha de fin</label>
+                                        <input type="date" class="form-control" id="endDate" required>
+                                    </div>
+                                </div>
+
+                                <!-- Group Size and Budget -->
+                                <div class="row mb-4">
+                                    <div class="col-md-6 mb-3 mb-md-0">
+                                        <label for="groupSize" class="form-label">Tamaño del grupo</label>
+                                        <select class="form-select" id="groupSize" required>
+                                            <option value="" selected disabled>Selecciona una opción</option>
+                                            <option value="2-4">Pequeño (2-4 personas)</option>
+                                            <option value="5-8">Mediano (5-8 personas)</option>
+                                            <option value="9+">Grande (9+ personas)</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="budget" class="form-label">Presupuesto estimado por persona</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text">€</span>
+                                            <input type="number" class="form-control" id="budget" placeholder="Ej: 1500"
+                                                required>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Trip Description -->
+                                <div class="mb-4">
+                                    <label for="tripDescription" class="form-label">Descripción del viaje</label>
+                                    <textarea class="form-control" id="tripDescription" rows="5"
+                                        placeholder="Describe tu idea de viaje, actividades que te gustaría hacer, lugares a visitar, etc."
+                                        required></textarea>
+                                </div>
+
+                                <!-- Trip Itinerary -->
+                                <div class="mb-4">
+                                    <label class="form-label">Itinerario tentativo</label>
+                                    <div id="itineraryContainer">
+                                        <div class="itinerary-day mb-3">
+                                            <div class="input-group">
+                                                <span class="input-group-text">Día 1</span>
+                                                <input type="text" class="form-control"
+                                                    placeholder="Ej: Llegada a Barcelona, check-in en el hotel, paseo por Las Ramblas">
+                                            </div>
+                                        </div>
+                                        <div class="itinerary-day mb-3">
+                                            <div class="input-group">
+                                                <span class="input-group-text">Día 2</span>
+                                                <input type="text" class="form-control"
+                                                    placeholder="Ej: Visita a la Sagrada Familia, Parque Güell, cena en el Barrio Gótico">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex justify-content-between mt-2">
+                                        <button type="button" class="btn btn-outline-secondary btn-sm" id="addDayBtn">
+                                            <i class="bi bi-plus-circle"></i> Añadir día
+                                        </button>
+                                        <button type="button" class="btn btn-outline-secondary btn-sm"
+                                            id="removeDayBtn">
+                                            <i class="bi bi-dash-circle"></i> Eliminar día
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- Trip Activities -->
+                                <div class="mb-4">
+                                    <label class="form-label">Actividades incluidas</label>
+                                    <div class="row">
+                                        <div class="col-md-4 mb-2">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" id="activity1">
+                                                <label class="form-check-label" for="activity1">Visitas
+                                                    culturales</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4 mb-2">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" id="activity2">
+                                                <label class="form-check-label" for="activity2">Gastronomía
+                                                    local</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4 mb-2">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" id="activity3">
+                                                <label class="form-check-label" for="activity3">Senderismo</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4 mb-2">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" id="activity4">
+                                                <label class="form-check-label" for="activity4">Deportes
+                                                    acuáticos</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4 mb-2">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" id="activity5">
+                                                <label class="form-check-label" for="activity5">Vida nocturna</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4 mb-2">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" id="activity6">
+                                                <label class="form-check-label" for="activity6">Fotografía</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Trip Requirements -->
+                                <div class="mb-4">
+                                    <label for="requirements" class="form-label">Requisitos para los compañeros de
+                                        viaje</label>
+                                    <textarea class="form-control" id="requirements" rows="3"
+                                        placeholder="Ej: Buscamos personas activas, con buen nivel de inglés, interesadas en la fotografía..."></textarea>
+                                </div>
+
+                                <!-- Trip Images -->
+                                <div class="mb-4">
+                                    <label class="form-label">Imágenes del destino (opcional)</label>
+                                    <div class="input-group mb-3">
+                                        <input type="file" class="form-control" id="tripImages" accept="image/*"
+                                            multiple>
+                                        <label class="input-group-text" for="tripImages">Subir</label>
+                                    </div>
+                                    <div class="form-text">Puedes subir hasta 5 imágenes para ilustrar tu propuesta de
+                                        viaje.</div>
+                                </div>
+
+                                <!-- Contact Preferences -->
+                                <div class="mb-4">
+                                    <label class="form-label">Preferencias de contacto</label>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="contactPref1" checked>
+                                        <label class="form-check-label" for="contactPref1">Recibir notificaciones cuando
+                                            alguien quiera unirse al grupo</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="contactPref2" checked>
+                                        <label class="form-check-label" for="contactPref2">Permitir chat directo con
+                                            interesados</label>
+                                    </div>
+                                </div>
+
+                                <!-- Terms and Conditions -->
+                                <div class="mb-4">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="termsCheck" required>
+                                        <label class="form-check-label" for="termsCheck">
+                                            Acepto los <a href="#">términos y condiciones</a> y la <a href="#">política
+                                                de privacidad</a> de AddVenture
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <!-- Submit Button -->
+                                <div class="text-center">
+                                    <button type="submit" class="btn btn-primary btn-lg px-5">Crear grupo</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Tips Section -->
+    <section class="py-5 bg-light">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-8 text-center">
+                    <h2 class="section-title">Consejos para crear un grupo exitoso</h2>
+                    <p class="section-subtitle">Maximiza tus posibilidades de encontrar compañeros de viaje ideales</p>
+                </div>
+            </div>
+            <div class="row mt-4">
+                <div class="col-md-4 mb-4">
+                    <div class="tip-card">
+                        <div class="tip-icon">
+                            <i class="bi bi-lightbulb-fill"></i>
+                        </div>
+                        <h4>Sé específico</h4>
+                        <p>Cuanto más detallada sea tu propuesta, más fácil será atraer a personas con intereses
+                            similares. Incluye actividades concretas y el tipo de experiencia que buscas.</p>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="tip-card">
+                        <div class="tip-icon">
+                            <i class="bi bi-calendar-check-fill"></i>
+                        </div>
+                        <h4>Planifica con tiempo</h4>
+                        <p>Crea tu grupo con al menos 2-3 meses de antelación para dar tiempo a que otros viajeros se
+                            unan y puedan organizar sus agendas y presupuestos.</p>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="tip-card">
+                        <div class="tip-icon">
+                            <i class="bi bi-chat-dots-fill"></i>
+                        </div>
+                        <h4>Mantén la comunicación</h4>
+                        <p>Responde rápidamente a los interesados y organiza videollamadas para conoceros mejor antes de
+                            confirmar el viaje. La confianza es fundamental.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Success Stories -->
+    <section class="py-5">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-8 text-center">
+                    <h2 class="section-title">Historias de éxito</h2>
+                    <p class="section-subtitle">Grupos que comenzaron con una idea y terminaron en una gran aventura</p>
+                </div>
+            </div>
+            <div class="row mt-4">
+                <div class="col-md-6 mb-4">
+                    <div class="success-story">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <img src="https://source.unsplash.com/random/300x300/?group-travel"
+                                    alt="Historia de éxito" class="img-fluid rounded mb-3">
+                            </div>
+                            <div class="col-md-8">
+                                <h4>De desconocidos a amigos inseparables</h4>
+                                <p class="text-muted">Ruta por el Sudeste Asiático</p>
+                                <p>"Creé un grupo para recorrer Tailandia, Vietnam y Camboya. Se unieron 4 personas que
+                                    no conocía y ahora, un año después, seguimos en contacto y ya estamos planeando
+                                    nuestro próximo viaje juntos. La química fue instantánea."</p>
+                                <p class="fw-bold mb-0">- Carlos, 32 años</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-4">
+                    <div class="success-story">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <img src="https://source.unsplash.com/random/300x300/?hiking-group"
+                                    alt="Historia de éxito" class="img-fluid rounded mb-3">
+                            </div>
+                            <div class="col-md-8">
+                                <h4>Una aventura inesperada</h4>
+                                <p class="text-muted">Trekking en los Alpes</p>
+                                <p>"Nunca pensé que me atrevería a hacer un trekking por los Alpes, pero cuando vi el
+                                    grupo en AddVenture me animé. Fue una experiencia transformadora que me sacó de mi
+                                    zona de confort y me permitió descubrir una nueva pasión."</p>
+                                <p class="fw-bold mb-0">- Marta, 29 años</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer py-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 mb-4 mb-lg-0">
+                    <h5><i class="bi bi-compass"></i> AddVenture</h5>
+                    <p>Conectamos viajeros con intereses similares para crear experiencias inolvidables.</p>
+                    <div class="social-icons">
+                        <a href="#"><i class="bi bi-facebook"></i></a>
+                        <a href="#"><i class="bi bi-instagram"></i></a>
+                        <a href="#"><i class="bi bi-twitter"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-4 mb-4 mb-md-0">
+                    <h5>Enlaces</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="index.html">Inicio</a></li>
+                        <li><a href="how-it-works.html">¿Cómo funciona?</a></li>
+                        <li><a href="explore-trips.html">Explora viajes</a></li>
+                        <li><a href="create-group.html">Crea tu grupo</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-2 col-md-4 mb-4 mb-md-0">
+                    <h5>Recursos</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#">Blog de viajes</a></li>
+                        <li><a href="#">Guías de destinos</a></li>
+                        <li><a href="#">Consejos de seguridad</a></li>
+                        <li><a href="#">Preguntas frecuentes</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-4 col-md-4">
+                    <h5>Suscríbete</h5>
+                    <p>Recibe las últimas novedades y ofertas especiales</p>
+                    <form class="newsletter-form">
+                        <div class="input-group mb-3">
+                            <input type="email" class="form-control" placeholder="Tu email" required>
+                            <button class="btn btn-primary" type="submit">Suscribir</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <hr class="mt-4">
+            <div class="row">
+                <div class="col-md-6 text-center text-md-start">
+                    <p class="mb-0">&copy; 2023 AddVenture. Todos los derechos reservados.</p>
+                </div>
+                <div class="col-md-6 text-center text-md-end">
+                    <ul class="list-inline mb-0">
+                        <li class="list-inline-item"><a href="#">Términos y condiciones</a></li>
+                        <li class="list-inline-item"><a href="#">Política de privacidad</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Login Modal -->
+    <div class="modal fade" id="loginModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Iniciar sesión</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="loginForm">
+                        <div class="mb-3">
+                            <label for="loginEmail" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="loginEmail" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="loginPassword" class="form-label">Contraseña</label>
+                            <input type="password" class="form-control" id="loginPassword" required>
+                        </div>
+                        <div class="mb-3 form-check">
+                            <input type="checkbox" class="form-check-input" id="rememberMe">
+                            <label class="form-check-label" for="rememberMe">Recordarme</label>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Iniciar sesión</button>
+                    </form>
+                    <div class="text-center mt-3">
+                        <a href="#" class="text-decoration-none">¿Olvidaste tu contraseña?</a>
+                    </div>
+                    <hr>
+                    <div class="text-center">
+                        <p>¿No tienes cuenta?</p>
+                        <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#registerModal"
+                            data-bs-dismiss="modal">Regístrate</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Register Modal -->
+    <div class="modal fade" id="registerModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Regístrate</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="registerForm">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="firstName" class="form-label">Nombre</label>
+                                <input type="text" class="form-control" id="firstName" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="lastName" class="form-label">Apellido</label>
+                                <input type="text" class="form-control" id="lastName" required>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="registerEmail" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="registerEmail" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="registerPassword" class="form-label">Contraseña</label>
+                            <input type="password" class="form-control" id="registerPassword" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="confirmPassword" class="form-label">Confirmar contraseña</label>
+                            <input type="password" class="form-control" id="confirmPassword" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Intereses de viaje (selecciona al menos 3)</label>
+                            <div class="d-flex flex-wrap gap-2">
+                                <div class="form-check">
+                                    <input class="form-check-input interest-check" type="checkbox" id="adventure">
+                                    <label class="form-check-label" for="adventure">Aventura</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input interest-check" type="checkbox" id="culture">
+                                    <label class="form-check-label" for="culture">Cultura</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input interest-check" type="checkbox" id="beach">
+                                    <label class="form-check-label" for="beach">Playa</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input interest-check" type="checkbox" id="gastronomy">
+                                    <label class="form-check-label" for="gastronomy">Gastronomía</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input interest-check" type="checkbox" id="nature">
+                                    <label class="form-check-label" for="nature">Naturaleza</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input interest-check" type="checkbox" id="photography">
+                                    <label class="form-check-label" for="photography">Fotografía</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3 form-check">
+                            <input type="checkbox" class="form-check-input" id="termsCheck" required>
+                            <label class="form-check-label" for="termsCheck">Acepto los <a href="#">términos y
+                                    condiciones</a></label>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Crear cuenta</button>
+                    </form>
+                    <hr>
+                    <div class="text-center">
+                        <p>¿Ya tienes cuenta?</p>
+                        <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#loginModal"
+                            data-bs-dismiss="modal">Iniciar sesión</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Modal -->
+    <div class="modal fade" id="successModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-success text-white">
+                    <h5 class="modal-title">¡Grupo creado con éxito!</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <i class="bi bi-check-circle-fill text-success display-1 mb-4"></i>
+                    <h4>Tu grupo de viaje ha sido publicado</h4>
+                    <p>Pronto recibirás notificaciones de viajeros interesados en unirse a tu aventura.</p>
+                    <div class="d-grid gap-2 mt-4">
+                        <a href="explore-trips.html" class="btn btn-primary">Ver todos los viajes</a>
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script th:src="@{/js/main.js}"></script>
+</body>
+
+</html>
