@@ -33,12 +33,13 @@
                         <div class="card-body p-lg-5">
                             <h2 class="card-title text-center mb-4">Detalles del viaje</h2>
 
-                            <form id="createGroupForm">
+                            <form th:action="@{/grupos/crear}" th:object="${viajeDTO}" method="post"
+                                enctype="multipart/form-data" id="createGroupForm">
                                 <!-- Trip Title -->
                                 <div class="mb-4">
                                     <label for="tripTitle" class="form-label">Título del viaje</label>
                                     <input type="text" class="form-control" id="tripTitle"
-                                        placeholder="Ej: Ruta por el norte de Italia" required>
+                                        placeholder="Ej: Ruta por el norte de Colombia" required th:field="*{titulo}">
                                     <div class="form-text">Elige un título atractivo que describa la esencia de tu
                                         viaje.</div>
                                 </div>
@@ -48,11 +49,11 @@
                                     <div class="col-md-6 mb-3 mb-md-0">
                                         <label for="destination" class="form-label">Destino principal</label>
                                         <input type="text" class="form-control" id="destination"
-                                            placeholder="Ej: Barcelona, España" required>
+                                            placeholder="Ej: Lima, Peru" th:field="*{destino}" required>
                                     </div>
                                     <div class="col-md-6">
                                         <label for="tripType" class="form-label">Tipo de viaje</label>
-                                        <select class="form-select" id="tripType" required>
+                                        <select class="form-select" th:field="*{tipoViaje}" id="tripType" required>
                                             <option value="" selected disabled>Selecciona una opción</option>
                                             <option value="aventura">Aventura</option>
                                             <option value="cultura">Cultura</option>
@@ -69,11 +70,13 @@
                                 <div class="row mb-4">
                                     <div class="col-md-6 mb-3 mb-md-0">
                                         <label for="startDate" class="form-label">Fecha de inicio</label>
-                                        <input type="date" class="form-control" id="startDate" required>
+                                        <input type="date" th:field="*{fechaInicio}" class="form-control" id="startDate"
+                                            required>
                                     </div>
                                     <div class="col-md-6">
                                         <label for="endDate" class="form-label">Fecha de fin</label>
-                                        <input type="date" class="form-control" id="endDate" required>
+                                        <input type="date" th:field="*{fechaFin}" class="form-control" id="endDate"
+                                            required>
                                     </div>
                                 </div>
 
@@ -81,7 +84,7 @@
                                 <div class="row mb-4">
                                     <div class="col-md-6 mb-3 mb-md-0">
                                         <label for="groupSize" class="form-label">Tamaño del grupo</label>
-                                        <select class="form-select" id="groupSize" required>
+                                        <select th:field="*{tamanoGrupo}" class="form-select" id="groupSize" required>
                                             <option value="" selected disabled>Selecciona una opción</option>
                                             <option value="2-4">Pequeño (2-4 personas)</option>
                                             <option value="5-8">Mediano (5-8 personas)</option>
@@ -91,9 +94,9 @@
                                     <div class="col-md-6">
                                         <label for="budget" class="form-label">Presupuesto estimado por persona</label>
                                         <div class="input-group">
-                                            <span class="input-group-text">€</span>
-                                            <input type="number" class="form-control" id="budget" placeholder="Ej: 1500"
-                                                required>
+                                            <span class="input-group-text">S/</span>
+                                            <input type="number" th:field="*{presupuesto}" class="form-control"
+                                                id="budget" placeholder="Ej: 1500" required>
                                         </div>
                                     </div>
                                 </div>
@@ -101,7 +104,8 @@
                                 <!-- Trip Description -->
                                 <div class="mb-4">
                                     <label for="tripDescription" class="form-label">Descripción del viaje</label>
-                                    <textarea class="form-control" id="tripDescription" rows="5"
+                                    <textarea class="form-control" th:field="*{descripcion}" id="tripDescription"
+                                        rows="5"
                                         placeholder="Describe tu idea de viaje, actividades que te gustaría hacer, lugares a visitar, etc."
                                         required></textarea>
                                 </div>
@@ -113,15 +117,17 @@
                                         <div class="itinerary-day mb-3">
                                             <div class="input-group">
                                                 <span class="input-group-text">Día 1</span>
-                                                <input type="text" class="form-control"
-                                                    placeholder="Ej: Llegada a Barcelona, check-in en el hotel, paseo por Las Ramblas">
+                                                <input type="text" th:field="*{itinerario[0].descripcion}"
+                                                    class="form-control"
+                                                    placeholder="Ej: Llegada a Cusco, check-in en el hotel, paseo por la Plaza de Armas" />
                                             </div>
                                         </div>
                                         <div class="itinerary-day mb-3">
                                             <div class="input-group">
                                                 <span class="input-group-text">Día 2</span>
-                                                <input type="text" class="form-control"
-                                                    placeholder="Ej: Visita a la Sagrada Familia, Parque Güell, cena en el Barrio Gótico">
+                                                <input type="text" th:field="*{itinerario[1].descripcion}"
+                                                    class="form-control"
+                                                    placeholder="Ej: Visita a Machu Picchu, Valle Sagrado, cena en el centro histórico de Cusco" />
                                             </div>
                                         </div>
                                     </div>
@@ -136,47 +142,50 @@
                                     </div>
                                 </div>
 
-                                <!-- Trip Activities -->
+                                <!-- Actividades incluidas -->
                                 <div class="mb-4">
                                     <label class="form-label">Actividades incluidas</label>
                                     <div class="row">
                                         <div class="col-md-4 mb-2">
                                             <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" id="activity1">
-                                                <label class="form-check-label" for="activity1">Visitas
-                                                    culturales</label>
+                                                <input class="form-check-input" type="checkbox"
+                                                    th:field="*{actividades}" value="Visitas culturales" />
+                                                <label class="form-check-label">Visitas culturales</label>
                                             </div>
                                         </div>
                                         <div class="col-md-4 mb-2">
                                             <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" id="activity2">
-                                                <label class="form-check-label" for="activity2">Gastronomía
-                                                    local</label>
+                                                <input class="form-check-input" type="checkbox"
+                                                    th:field="*{actividades}" value="Gastronomía local" />
+                                                <label class="form-check-label">Gastronomía local</label>
                                             </div>
                                         </div>
                                         <div class="col-md-4 mb-2">
                                             <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" id="activity3">
-                                                <label class="form-check-label" for="activity3">Senderismo</label>
+                                                <input class="form-check-input" type="checkbox"
+                                                    th:field="*{actividades}" value="Senderismo" />
+                                                <label class="form-check-label">Senderismo</label>
                                             </div>
                                         </div>
                                         <div class="col-md-4 mb-2">
                                             <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" id="activity4">
-                                                <label class="form-check-label" for="activity4">Deportes
-                                                    acuáticos</label>
+                                                <input class="form-check-input" type="checkbox"
+                                                    th:field="*{actividades}" value="Deportes acuáticos" />
+                                                <label class="form-check-label">Deportes acuáticos</label>
                                             </div>
                                         </div>
                                         <div class="col-md-4 mb-2">
                                             <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" id="activity5">
-                                                <label class="form-check-label" for="activity5">Vida nocturna</label>
+                                                <input class="form-check-input" type="checkbox"
+                                                    th:field="*{actividades}" value="Vida nocturna" />
+                                                <label class="form-check-label">Vida nocturna</label>
                                             </div>
                                         </div>
                                         <div class="col-md-4 mb-2">
                                             <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" id="activity6">
-                                                <label class="form-check-label" for="activity6">Fotografía</label>
+                                                <input class="form-check-input" type="checkbox"
+                                                    th:field="*{actividades}" value="Fotografía" />
+                                                <label class="form-check-label">Fotografía</label>
                                             </div>
                                         </div>
                                     </div>
@@ -186,8 +195,8 @@
                                 <div class="mb-4">
                                     <label for="requirements" class="form-label">Requisitos para los compañeros de
                                         viaje</label>
-                                    <textarea class="form-control" id="requirements" rows="3"
-                                        placeholder="Ej: Buscamos personas activas, con buen nivel de inglés, interesadas en la fotografía..."></textarea>
+                                    <textarea class="form-control" th:field="*{requisitos}" id="requirements" rows="3"
+                                        placeholder="Ej: Buscamos personas activas, con buen nivel de inglés o no, interesadas en la fotografía..."></textarea>
                                 </div>
 
                                 <!-- Trip Images -->
@@ -206,12 +215,14 @@
                                 <div class="mb-4">
                                     <label class="form-label">Preferencias de contacto</label>
                                     <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" id="contactPref1" checked>
+                                        <input class="form-check-input" th:field="*{notificacionesUnirse}"
+                                            type="checkbox" id="contactPref1" checked>
                                         <label class="form-check-label" for="contactPref1">Recibir notificaciones cuando
                                             alguien quiera unirse al grupo</label>
                                     </div>
                                     <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" id="contactPref2" checked>
+                                        <input class="form-check-input" th:field="*{permitirChatDirecto}"
+                                            type="checkbox" id="contactPref2" checked>
                                         <label class="form-check-label" for="contactPref2">Permitir chat directo con
                                             interesados</label>
                                     </div>
@@ -531,7 +542,6 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script th:src="@{/js/main.js}"></script>
 </body>
 
 </html>

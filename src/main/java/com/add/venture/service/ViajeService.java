@@ -2,21 +2,12 @@ package com.add.venture.service;
 
 import java.util.List;
 
+import com.add.venture.dto.ViajeDTO;
+import com.add.venture.dto.ViajeRespuestaDTO;
 import com.add.venture.model.Viaje;
 
 public interface ViajeService {
+
+    Viaje crearViaje(ViajeDTO viajeDTO);
     
-    public Viaje guardarViaje(Viaje viaje);
-
-    public Viaje buscarViajePorId(Long id);
-
-    public Viaje actualizarViaje(Viaje viaje);
-
-    public void eliminarViajePorId(Long id);
-
-    public List<Viaje> listarViajes();
-
-    public List<Viaje> listarViajesPorUsuario(Long idUsuario);
-
-    public List<Viaje> listarViajesPorCategoria(String categoria);
 }

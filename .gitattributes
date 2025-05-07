@@ -1,2 +1,9 @@
-/mvnw text eol=lf
-*.cmd text eol=crlf
+# Fuerza a todos los archivos de texto a normalizar con LF
+* text=auto
+
+# Normaliza terminaciones de línea para tipos de archivo clave
+*.java text eol=lf
+*.properties text eol=lf
+*.html text eol=lf
+*.js text eol=lf
+*.css text eol=lf
