@@ -16,7 +16,7 @@ public class HomeController {
 
     @GetMapping("/create")
     public String createForm(Model model) {
-        return "/user/creaTuGrupo";
+        return "/grupos/crear";
     }
 
     @GetMapping("/explore")

@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AddVenture - Crear Cuenta</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome para iconos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- CSS personalizado -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <link rel="stylesheet" th:href="@{/css/crear-cuenta.css}">
+</head>
+
+<body>
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-8 col-lg-6">
+                <div class="mb-4">
+                    <a href="index.html" class="text-decoration-none text-primary">
+                        <i class="fas fa-arrow-left me-2"></i>
+                        Volver a inicio
+                    </a>
+                </div>
+
+                <div class="card border">
+                    <div class="card-header bg-white text-center py-4 border-bottom-0">
+                        <div class="mb-4">
+                            <a href="index.html"
+                                class="text-decoration-none d-flex align-items-center justify-content-center">
+                                <div class="text-primary me-2">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"
+                                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round">
+                                        <path d="M12 2L2 7l10 5 10-5-10-5z" />
+                                        <path d="M2 17l10 5 10-5" />
+                                        <path d="M2 12l10 5 10-5" />
+                                    </svg>
+                                </div>
+                                <span class="fs-4 logo-text">AddVenture</span>
+                            </a>
+                        </div>
+                        <h2 class="fs-4 fw-bold">Crea tu cuenta</h2>
+                        <p class="text-muted" id="step-description">Completa tus datos personales para comenzar</p>
+
+                        <!-- Indicador de pasos -->
+                        <div class="step-indicator">
+                            <div class="step active" id="step-indicator-1">
+                                <div class="step-circle">1</div>
+                                <span class="step-text">Datos</span>
+                            </div>
+                            <div class="step" id="step-indicator-2">
+                                <div class="step-circle">2</div>
+                                <span class="step-text">Email</span>
+                            </div>
+                            <div class="step" id="step-indicator-3">
+                                <div class="step-circle">3</div>
+                                <span class="step-text">Teléfono</span>
+                            </div>
+                            <div class="step" id="step-indicator-4">
+                                <div class="step-circle">4</div>
+                                <span class="step-text">Completado</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card-body p-4">
+                        <!-- Paso 1: Información personal -->
+                        <div class="form-step active" id="step-1">
+                            <div th:if="${error}" class="alert alert-danger" role="alert" th:text="${error}"></div>
+
+                            <form th:action="@{/usuarios/registro}" th:object="${usuario}" method="post"
+                                id="personal-info-form">
+                                <div class="row mb-3">
+                                    <div class="col-md-6 mb-3 mb-md-0">
+                                        <label for="nombre" class="form-label">
+                                            <i class="fa-regular fa-user me-2"></i>Nombre
+                                        </label>
+                                        <input type="text" class="form-control" id="nombre" placeholder="Tu nombre"
+                                            th:field="*{nombre}" required>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="apellido" class="form-label">Apellido</label>
+                                        <input type="text" class="form-control" id="apellido" placeholder="Tu apellido"
+                                            th:field="*{apellido}" required>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="nombreUsuario" class="form-label">
+                                        <i class="fa-regular fa-at me-2"></i>Nombre de usuario
+                                    </label>
+                                    <div class="username-input">
+                                        <input type="text" class="form-control" id="nombreUsuario"
+                                            placeholder="@usuario_unico" th:field="*{nombreUsuario}" required>
+                                        <div class="username-status" id="username-status"></div>
+                                    </div>
+                                    <small class="text-muted">Este será tu identificador único en la plataforma</small>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <div class="col-md-6 mb-3 mb-md-0">
+                                        <label for="pais" class="form-label">
+                                            <i class="bi bi-globe me-2"></i>País
+                                        </label>
+                                        <select class="form-select" id="pais" th:field="*{pais}" required>
+                                            <option value="Perú" th:selected="*{pais} == 'Perú'">Perú</option>
+                                            <option value="" disabled>Proximamente mas paises</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="ciudad" class="form-label">
+                                            <i class="bi bi-geo-alt me-2"></i>Ciudad
+                                        </label>
+                                        <input type="text" class="form-control" id="ciudad" placeholder="Tu ciudad"
+                                            th:field="*{ciudad}" required>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="fechaNacimiento" class="form-label">
+                                        <i class="fa-regular fa-calendar me-2"></i>Fecha de nacimiento
+                                    </label>
+                                    <input type="date" class="form-control" id="fechaNacimiento"
+                                        th:field="*{fechaNacimiento}" required>
+                                    <small class="text-muted d-flex align-items-center mt-1">
+                                        <i class="fas fa-exclamation-triangle text-warning me-1"></i>
+                                        Debes ser mayor de 18 años para registrarte
+                                    </small>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="email" class="form-label">
+                                        <i class="fa-regular fa-envelope me-2"></i>Email
+                                    </label>
+                                    <input type="email" class="form-control" id="email" placeholder="tu@email.com"
+                                        th:field="*{email}" required>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="telefono" class="form-label">
+                                        <i class="bi bi-telephone me-2"></i>Número de teléfono
+                                    </label>
+                                    <div class="input-group">
+                                        <span class="country-code" id="country-code">+51</span>
+                                        <input type="tel" class="form-control phone-input" id="telefono"
+                                            placeholder="612 345 678" th:field="*{telefono}" required>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="password" class="form-label">
+                                        <i class="bi bi-lock me-2"></i>Contraseña
+                                    </label>
+                                    <div class="input-group">
+                                        <input type="password" class="form-control" id="password"
+                                            placeholder="Mínimo 8 caracteres" th:field="*{contrasena}" required>
+                                        <button class="btn btn-outline-secondary" type="button" id="toggle-password">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="confirmPassword" class="form-label">Confirmar contraseña</label>
+                                    <input type="password" class="form-control" id="confirmPassword"
+                                        placeholder="Repite tu contraseña" th:field="*{confirmContrasena}" required>
+                                </div>
+
+                                <!-- <div class="mb-3 form-check">
+                                    <input type="checkbox" class="form-check-input" id="aceptaTerminos"
+                                        th:field="*{aceptaTerminos}" required>
+                                    <label class="form-check-label" for="aceptaTerminos">
+                                        Acepto los <a href="#" class="text-decoration-none">términos y condiciones</a>
+                                    </label>
+                                </div> -->
+
+                                <button type="submit" class="btn btn-primary w-100 mt-3">Continuar</button>
+                            </form>
+                        </div>
+
+
+                        <!-- Paso 2: Verificación de email -->
+                        <div class="form-step" id="step-2">
+                            <div class="alert alert-info-custom mb-4">
+                                <div class="d-flex align-items-center mb-2">
+                                    <div class="icon-circle me-2">
+                                        <i class="fas fa-envelope text-primary"></i>
+                                    </div>
+                                    <div>
+                                        <h5 class="mb-0 fw-medium">Verificación de email</h5>
+                                        <p class="mb-0 small">Paso 2 de 4</p>
+                                    </div>
+                                </div>
+                                <p class="mb-0 small">
+                                    Hemos enviado un código de verificación a <strong
+                                        id="email-display">tu@email.com</strong>.
+                                    Por favor, introduce el código para continuar con el registro.
+                                </p>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="emailCode" class="form-label">Código de verificación</label>
+                                <input type="text" class="form-control verification-code" id="emailCode"
+                                    placeholder="123456" maxlength="6">
+                            </div>
+
+                            <div class="text-center mb-3">
+                                <p class="small text-muted mb-2">¿No has recibido el código?</p>
+                                <button type="button" class="btn btn-link p-0" id="resend-email-code">Reenviar
+                                    código</button>
+                                <div class="small text-muted mt-1" id="email-countdown" style="display: none;">
+                                    Reenviar código (60s)
+                                </div>
+                            </div>
+
+                            <button type="button" class="btn btn-primary w-100" id="verify-email">Verificar
+                                email</button>
+                        </div>
+
+                        <!-- Paso 3: Verificación de teléfono -->
+                        <div class="form-step" id="step-3">
+                            <div class="alert alert-success-custom mb-3">
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-check-circle text-success me-2"></i>
+                                    <div>
+                                        <h5 class="mb-0 fw-medium text-success">Email verificado correctamente</h5>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="alert alert-info-custom mb-4">
+                                <div class="d-flex align-items-center mb-2">
+                                    <div class="icon-circle me-2">
+                                        <i class="fas fa-mobile-alt text-primary"></i>
+                                    </div>
+                                    <div>
+                                        <h5 class="mb-0 fw-medium">Verificación de teléfono</h5>
+                                        <p class="mb-0 small">Paso 3 de 4</p>
+                                    </div>
+                                </div>
+                                <p class="mb-0 small">
+                                    Hemos enviado un código de verificación al número
+                                    <strong id="phone-display">+34 612 345 678</strong>.
+                                    Por favor, introduce el código para continuar con el registro.
+                                </p>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="phoneCode" class="form-label">Código de verificación</label>
+                                <input type="text" class="form-control verification-code" id="phoneCode"
+                                    placeholder="123456" maxlength="6">
+                            </div>
+
+                            <div class="text-center mb-3">
+                                <p class="small text-muted mb-2">¿No has recibido el código?</p>
+                                <button type="button" class="btn btn-link p-0" id="resend-phone-code">Reenviar
+                                    código</button>
+                                <div class="small text-muted mt-1" id="phone-countdown" style="display: none;">
+                                    Reenviar código (60s)
+                                </div>
+                            </div>
+
+                            <button type="button" class="btn btn-primary w-100" id="verify-phone">Verificar
+                                teléfono</button>
+                        </div>
+
+                        <!-- Paso 4: Completado -->
+                        <div class="form-step" id="step-4">
+                            <div class="text-center mb-4">
+                                <div class="completion-icon">
+                                    <i class="fas fa-shield-alt"></i>
+                                </div>
+                                <h2 class="fs-3 fw-bold mb-2">¡Verificación completada!</h2>
+                                <p class="text-muted">
+                                    Tu cuenta ha sido verificada correctamente. Ahora puedes disfrutar de todas las
+                                    funcionalidades de AddVenture.
+                                </p>
+                            </div>
+
+                            <div class="alert alert-info-custom mb-4">
+                                <h5 class="fw-medium mb-2">Beneficios de tu cuenta verificada:</h5>
+                                <div class="benefit-item">
+                                    <i class="fas fa-check-circle"></i>
+                                    <span>Unirte a grupos de viaje</span>
+                                </div>
+                                <div class="benefit-item">
+                                    <i class="fas fa-check-circle"></i>
+                                    <span>Crear tus propios grupos</span>
+                                </div>
+                                <div class="benefit-item">
+                                    <i class="fas fa-check-circle"></i>
+                                    <span>Chatear con otros viajeros</span>
+                                </div>
+                                <div class="benefit-item">
+                                    <i class="fas fa-check-circle"></i>
+                                    <span>Recibir reseñas para obtener la insignia de verificado</span>
+                                </div>
+                            </div>
+
+                            <button type="button" class="btn btn-primary w-100" id="complete-registration">
+                                Comenzar a explorar
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Footer para el paso 1 -->
+                    <div class="card-footer bg-white text-center py-3 border-top-0" id="step-1-footer">
+                        <p class="mb-0 small">
+                            ¿Ya tienes una cuenta?
+                            <a href="IniciarSesion.html" class="text-decoration-none fw-medium text-primary">Inicia
+                                sesión</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS y Popper.js -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- JavaScript personalizado -->
+    <script th:src="@{/js/crear-cuenta.js}"></script>
+</body>
+
+</html>

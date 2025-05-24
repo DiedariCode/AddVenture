@@ -1,88 +1,86 @@
 package com.add.venture.model;
 
-import java.util.ArrayList;
+import java.math.BigDecimal;
+import java.sql.Timestamp;
+
+import java.time.LocalDate;
 import java.util.List;
 
+import jakarta.validation.constraints.DecimalMax;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
+
+
 import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "usuarios")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Usuario {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    
-    @Column(nullable = false)
+    private Long idUsuario;
+
+    @NotBlank(message = "El nombre es obligatorio")
     private String nombre;
-    
-    @Column(nullable = false, unique = true)
+
+    @NotBlank(message = "Los apellidos son obligatorios")
+    private String apellidos;
+
+    @NotBlank(message = "El nombre de usuario es obligatorio")
+    private String nombreUsuario;
+
+    @Email(message = "El email debe ser válido")
+    @NotBlank(message = "El email es obligatorio")
     private String email;
-    
-    @Column(nullable = false)
-    private String password;
-    
-    @OneToMany(mappedBy = "creador", cascade = CascadeType.ALL)
-    private List<Viaje> viajesCreados = new ArrayList<>();
-    
-    // Constructor vacío
-    public Usuario() {
-    }
-    
-    // Getters y setters
-    public Long getId() {
-        return id;
-    }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    @Pattern(regexp = "\\d{9}", message = "El teléfono debe tener 9 DIGITOS ANIMAL")
+    private String telefono;
 
-    public String getNombre() {
-        return nombre;
-    }
+    private String pais;
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
+    private String ciudad;
 
-    public String getEmail() {
-        return email;
-    }
+    @NotNull(message = "La fecha de nacimiento es obligatoria")
+    private LocalDate fechaNacimiento;
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
+    @NotBlank(message = "La contraseña no puede estar vacía")
+    private String contrasenaHash;
 
-    public String getPassword() {
-        return password;
-    }
+    private String fotoPerfil;
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
+    private String fotoPortada;
 
-    public List<Viaje> getViajesCreados() {
-        return viajesCreados;
-    }
+    @Size(max = 1000, message = "La descripción no puede superar los 1000 caracteres")
+    private String descripcion;
 
-    public void setViajesCreados(List<Viaje> viajesCreados) {
-        this.viajesCreados = viajesCreados;
-    }
-    
-    public void addViajeCreado(Viaje viaje) {
-        viajesCreados.add(viaje);
-        viaje.setCreador(this);
-    }
-    
-    public void removeViajeCreado(Viaje viaje) {
-        viajesCreados.remove(viaje);
-        viaje.setCreador(null);
-    }
+    private Timestamp fechaRegistro;
+
+    private boolean esVerificado;
+
+    @DecimalMin(value = "0.0", message = "La puntuación no puede ser negativa")
+    @DecimalMax(value = "5.0", message = "La puntuación máxima es 5.0")
+    private BigDecimal puntosReputacion;
+
+    private int resenasPositivas;
+
+    @NotBlank(message = "El estado de la cuenta es obligatorio")
+    private String estadoCuenta; // ACTIVA, ELIMINADA, SUSPENDIDA
+
+    @OneToMany(mappedBy = "idCreador", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<GrupoViaje> gruposCreados;
 }
