@@ -1,6 +1,4 @@
-
 document.addEventListener("DOMContentLoaded", function () {
-
     // === Verificación dinámica de nombre de usuario ===
     const usernameInput = document.getElementById("nombreUsuario");
     const usernameStatus = document.getElementById("username-status");
@@ -9,7 +7,6 @@ document.addEventListener("DOMContentLoaded", function () {
     usernameInput.addEventListener("input", function () {
         let username = this.value.trim();
 
-        // Agregar automáticamente el @ y eliminar los extras
         if (!username.startsWith("@")) {
             username = "@" + username.replace(/@/g, "");
             this.value = username;
@@ -70,8 +67,8 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     // === Validar código de verificación ===
-    document.getElementById('btn-validar-codigo').addEventListener('click', async function () {
-        const code = document.getElementById('codigo-verificacion').value.trim();
+    document.getElementById('verify-email').addEventListener('click', async function () {
+        const code = document.getElementById('emailCode').value.trim();
         const email = document.getElementById('email-display').innerText;
 
         if (!code) {
@@ -92,7 +89,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
             if (data.verified) {
                 alert("✅ Código verificado correctamente. Puedes continuar con el registro.");
-                // Aquí podrías pasar al siguiente paso del formulario
+                document.getElementById('step-2').classList.remove('active');
+                document.getElementById('step-4').classList.add('active');
             } else {
                 alert("❌ Código incorrecto o expirado. Intenta nuevamente.");
             }
@@ -100,5 +98,10 @@ document.addEventListener("DOMContentLoaded", function () {
             console.error("Error al verificar código:", err);
             alert("Error de red al verificar el código.");
         }
+    });
+
+    // === Enviar formulario final ===
+    document.getElementById('complete-registration').addEventListener('click', function() {
+      document.getElementById('registro-form').submit();
     });
 });

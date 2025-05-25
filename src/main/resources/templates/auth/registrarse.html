@@ -67,11 +67,12 @@
                     </div>
 
                     <div class="card-body p-4">
-                        <!-- Paso 1: Información personal -->
-                        <div th:if="${error}" class="alert alert-danger mt-0" role="alert" th:text="${error}"></div>
-                        <div class="form-step active" id="step-1">
-                            <form th:action="@{/usuarios/registro}" th:object="${usuario}" method="post"
-                                id="personal-info-form">
+                        <form th:action="@{/usuarios/registro}" th:object="${usuario}" method="post" id="registro-form">
+                            <!-- Mostrar error general -->
+                            <div th:if="${error}" class="alert alert-danger mt-0" role="alert" th:text="${error}"></div>
+
+                            <!-- Paso 1: Información personal -->
+                            <div class="form-step active" id="step-1">
                                 <div class="row mb-3">
                                     <div class="col-md-6 mb-3 mb-md-0">
                                         <label for="nombre" class="form-label">
@@ -96,7 +97,6 @@
                                             placeholder="@usuario_unico" th:field="*{nombreUsuario}" required>
                                         <div class="username-status" id="username-status"></div>
                                     </div>
-                                    <!-- Aquí se muestra la advertencia -->
                                     <small id="advertencia-username" class="text-danger" style="display: none;">
                                         Este nombre de usuario ya está en uso.
                                     </small>
@@ -110,7 +110,7 @@
                                         </label>
                                         <select class="form-select" id="pais" th:field="*{pais}" required>
                                             <option value="Perú" th:selected="*{pais} == 'Perú'">Perú</option>
-                                            <option value="" disabled>Proximamente mas paises</option>
+                                            <option value="" disabled>Próximamente más países</option>
                                         </select>
                                     </div>
                                     <div class="col-md-6">
@@ -172,95 +172,86 @@
                                         placeholder="Repite tu contraseña" th:field="*{confirmContrasena}" required>
                                 </div>
 
-                                <!-- <div class="mb-3 form-check">
-                                    <input type="checkbox" class="form-check-input" id="aceptaTerminos"
-                                        th:field="*{aceptaTerminos}" required>
-                                    <label class="form-check-label" for="aceptaTerminos">
-                                        Acepto los <a href="#" class="text-decoration-none">términos y condiciones</a>
-                                    </label>
-                                </div> -->
-
                                 <button type="button" class="btn btn-primary w-100 mt-3"
                                     id="step-1-next">Continuar</button>
-                            </form>
-                        </div>
+                            </div>
 
-
-                        <!-- Paso 2: Verificación de email -->
-                        <div class="form-step" id="step-2">
-                            <div class="alert alert-info-custom mb-4">
-                                <div class="d-flex align-items-center mb-2">
-                                    <div class="icon-circle me-2">
-                                        <i class="fas fa-envelope text-primary"></i>
+                            <!-- Paso 2: Verificación de email -->
+                            <div class="form-step" id="step-2">
+                                <div class="alert alert-info-custom mb-4">
+                                    <div class="d-flex align-items-center mb-2">
+                                        <div class="icon-circle me-2">
+                                            <i class="fas fa-envelope text-primary"></i>
+                                        </div>
+                                        <div>
+                                            <h5 class="mb-0 fw-medium">Verificación de email</h5>
+                                            <p class="mb-0 small">Paso 2 de 4</p>
+                                        </div>
                                     </div>
-                                    <div>
-                                        <h5 class="mb-0 fw-medium">Verificación de email</h5>
-                                        <p class="mb-0 small">Paso 2 de 4</p>
+                                    <p class="mb-0 small">
+                                        Hemos enviado un código de verificación a <strong
+                                            id="email-display">tu@email.com</strong>.
+                                        Por favor, introduce el código para continuar con el registro.
+                                    </p>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="emailCode" class="form-label">Código de verificación</label>
+                                    <input type="text" class="form-control verification-code" id="emailCode"
+                                        placeholder="123456" maxlength="6" required>
+                                </div>
+
+                                <div class="text-center mb-3">
+                                    <p class="small text-muted mb-2">¿No has recibido el código?</p>
+                                    <button type="button" class="btn btn-link p-0" id="resend-email-code">Reenviar
+                                        código</button>
+                                    <div class="small text-muted mt-1" id="email-countdown" style="display: none;">
+                                        Reenviar código (60s)
                                     </div>
                                 </div>
-                                <p class="mb-0 small">
-                                    Hemos enviado un código de verificación a <strong
-                                        id="email-display">tu@email.com</strong>.
-                                    Por favor, introduce el código para continuar con el registro.
-                                </p>
+
+                                <button type="button" class="btn btn-primary w-100" id="verify-email">Verificar
+                                    email</button>
                             </div>
 
-                            <div class="mb-3">
-                                <label for="emailCode" class="form-label">Código de verificación</label>
-                                <input type="text" class="form-control verification-code" id="emailCode"
-                                    placeholder="123456" maxlength="6">
+                            <!-- Paso 4: Completado -->
+                            <div class="form-step" id="step-4">
+                                <div class="text-center mb-4">
+                                    <div class="completion-icon">
+                                        <i class="fas fa-shield-alt"></i>
+                                    </div>
+                                    <h2 class="fs-3 fw-bold mb-2">¡Verificación completada!</h2>
+                                    <p class="text-muted">
+                                        Tu cuenta ha sido verificada correctamente. Ahora puedes disfrutar de todas las
+                                        funcionalidades de AddVenture.
+                                    </p>
+                                </div>
+
+                                <div class="alert alert-info-custom mb-4">
+                                    <h5 class="fw-medium mb-2">Beneficios de tu cuenta verificada:</h5>
+                                    <div class="benefit-item">
+                                        <i class="fas fa-check-circle"></i>
+                                        <span>Unirte a grupos de viaje</span>
+                                    </div>
+                                    <div class="benefit-item">
+                                        <i class="fas fa-check-circle"></i>
+                                        <span>Crear tus propios grupos</span>
+                                    </div>
+                                    <div class="benefit-item">
+                                        <i class="fas fa-check-circle"></i>
+                                        <span>Chatear con otros viajeros</span>
+                                    </div>
+                                    <div class="benefit-item">
+                                        <i class="fas fa-check-circle"></i>
+                                        <span>Recibir reseñas para obtener la insignia de verificado</span>
+                                    </div>
+                                </div>
+
+                                <button type="button" class="btn btn-primary w-100" id="complete-registration">
+                                    Comenzar a explorar
+                                </button>
                             </div>
-
-                            <div class="text-center mb-3">
-                                <p class="small text-muted mb-2">¿No has recibido el código?</p>
-                                <button type="button" class="btn btn-link p-0" id="resend-email-code">Reenviar
-                                    código</button>
-                                <div class="small text-muted mt-1" id="email-countdown" style="display: none;">
-                                    Reenviar código (60s)
-                                </div>
-                            </div>
-
-                            <button type="button" class="btn btn-primary w-100" id="verify-email">Verificar
-                                email</button>
-                        </div>
-
-                        <!-- Paso 4: Completado -->
-                        <div class="form-step" id="step-4">
-                            <div class="text-center mb-4">
-                                <div class="completion-icon">
-                                    <i class="fas fa-shield-alt"></i>
-                                </div>
-                                <h2 class="fs-3 fw-bold mb-2">¡Verificación completada!</h2>
-                                <p class="text-muted">
-                                    Tu cuenta ha sido verificada correctamente. Ahora puedes disfrutar de todas las
-                                    funcionalidades de AddVenture.
-                                </p>
-                            </div>
-
-                            <div class="alert alert-info-custom mb-4">
-                                <h5 class="fw-medium mb-2">Beneficios de tu cuenta verificada:</h5>
-                                <div class="benefit-item">
-                                    <i class="fas fa-check-circle"></i>
-                                    <span>Unirte a grupos de viaje</span>
-                                </div>
-                                <div class="benefit-item">
-                                    <i class="fas fa-check-circle"></i>
-                                    <span>Crear tus propios grupos</span>
-                                </div>
-                                <div class="benefit-item">
-                                    <i class="fas fa-check-circle"></i>
-                                    <span>Chatear con otros viajeros</span>
-                                </div>
-                                <div class="benefit-item">
-                                    <i class="fas fa-check-circle"></i>
-                                    <span>Recibir reseñas para obtener la insignia de verificado</span>
-                                </div>
-                            </div>
-
-                            <button type="button" class="btn btn-primary w-100" id="complete-registration">
-                                Comenzar a explorar
-                            </button>
-                        </div>
+                        </form>
                     </div>
 
                     <!-- Footer para el paso 1 -->
