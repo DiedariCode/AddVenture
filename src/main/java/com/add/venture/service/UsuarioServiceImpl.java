@@ -5,6 +5,8 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -50,4 +52,43 @@ public class UsuarioServiceImpl implements UsuarioService {
     public boolean existeEmail(String email) {
         return usuarioRepository.existsByEmail(email);
     }
+
+    /**
+     * Busca un usuario en la base de datos por su correo electrónico y lo mapea a
+     * un DTO de registro.
+     *
+     * @param email el correo electrónico del usuario a buscar.
+     * @return un objeto {@link RegistroUsuarioDTO} con los datos del usuario
+     *         encontrado;
+     *         si no se encuentra ningún usuario con el correo dado, retorna
+     *         {@code null}.
+     *
+     *         <p>
+     *         Este método utiliza el repositorio {@code usuarioRepository} para
+     *         buscar
+     *         un usuario por su email. Si el usuario existe, se crea un nuevo
+     *         {@code RegistroUsuarioDTO} con sus datos principales.
+     *         </p>
+     *
+     *         <p>
+     *         Los dos últimos parámetros del DTO se establecen como {@code null}.
+     *         </p>
+     */
+    @Override
+    public RegistroUsuarioDTO buscarPorEmail(String email) {
+        return usuarioRepository.findByEmail(email)
+                .map(usuario -> new RegistroUsuarioDTO(
+                        usuario.getNombre(),
+                        usuario.getApellidos(),
+                        usuario.getNombreUsuario(),
+                        usuario.getEmail(),
+                        usuario.getTelefono(),
+                        usuario.getPais(),
+                        usuario.getCiudad(),
+                        usuario.getFechaNacimiento(),
+                        null,
+                        null))
+                .orElse(null);
+    }
+
 }

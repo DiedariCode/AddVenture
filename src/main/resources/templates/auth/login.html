@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar Sesión - AddVenture</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" th:href="@{/css/iniciar-sesion.css}">
+</head>
+
+<body>
+    <div class="container login-container">
+        <a th:href="@{/}" class="back-link">
+            <i class="bi bi-arrow-left me-2"></i>
+            Volver a inicio
+        </a>
+
+        <div class="card">
+            <div class="card-body">
+                <a href="#" class="logo">
+                    <div class="text-primary me-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 2L2 7l10 5 10-5-10-5z" />
+                            <path d="M2 17l10 5 10-5" />
+                            <path d="M2 12l10 5 10-5" />
+                        </svg>
+                    </div>
+                    <span>AddVenture</span>
+                </a>
+
+                <h1>Inicia sesión</h1>
+                <!-- Mensajes de error o logout -->
+                <div th:if="${errorMensaje}" class="alert alert-danger" role="alert" th:text="${errorMensaje}"></div>
+                <div th:if="${logoutMensaje}" class="alert alert-success" role="alert" th:text="${logoutMensaje}"></div>
+
+                <ul class="nav nav-tabs" id="loginTabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active d-flex align-items-center" id="email-tab" data-bs-toggle="tab"
+                            data-bs-target="#email-tab-pane" type="button" role="tab" aria-controls="email-tab-pane"
+                            aria-selected="true">
+                            <i class="bi bi-envelope me-2"></i>
+                            Email
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link d-flex align-items-center" id="phone-tab" data-bs-toggle="tab"
+                            data-bs-target="#phone-tab-pane" type="button" role="tab" aria-controls="phone-tab-pane"
+                            aria-selected="false">
+                            <i class="bi bi-phone me-2"></i>
+                            Teléfono
+                        </button>
+                    </li>
+                </ul>
+
+                <div class="tab-content" id="loginTabsContent">
+                    <div class="tab-pane fade show active" id="email-tab-pane" role="tabpanel"
+                        aria-labelledby="email-tab" tabindex="0">
+                        <form id="emailLoginForm" method="post" action="/auth/login" novalidate>
+
+                            <!-- Token CSRF para seguridad -->
+                            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+
+                            <div class="mb-3">
+                                <label for="email" class="form-label">Email</label>
+                                <input type="email" name="username" class="form-control" id="email"
+                                    placeholder="tu@email.com" required>
+                                <div class="invalid-feedback">
+                                    Por favor ingresa un email válido.
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <div class="d-flex justify-content-between">
+                                    <label for="password-email" class="form-label">Contraseña</label>
+                                    <a href="#" class="forgot-password">¿Olvidaste tu contraseña?</a>
+                                </div>
+                                <div class="position-relative">
+                                    <input type="password" name="password" class="form-control" id="password-email"
+                                        placeholder="Tu contraseña" required>
+                                    <button type="button" class="password-toggle"
+                                        onclick="togglePassword('password-email')">
+                                        <i class="bi bi-eye"></i>
+                                    </button>
+                                    <div class="invalid-feedback">
+                                        La contraseña es obligatoria.
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mb-4 form-check">
+                                <input type="checkbox" class="form-check-input" id="remember-email">
+                                <label class="form-check-label" for="remember-email">Recordarme</label>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary w-100">Iniciar sesión</button>
+                        </form>
+                    </div>
+
+                    <div class="tab-pane fade" id="phone-tab-pane" role="tabpanel" aria-labelledby="phone-tab"
+                        tabindex="0">
+                        <form id="phoneLoginForm" novalidate>
+                            <div class="mb-3">
+                                <label for="phone" class="form-label">Número de teléfono</label>
+                                <input type="tel" class="form-control" id="phone" placeholder="+34 612 345 678"
+                                    required>
+                                <div class="invalid-feedback">
+                                    Por favor ingresa un número de teléfono válido.
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <div class="d-flex justify-content-between">
+                                    <label for="password-phone" class="form-label">Contraseña</label>
+                                    <a href="#" class="forgot-password">¿Olvidaste tu contraseña?</a>
+                                </div>
+                                <div class="position-relative">
+                                    <input type="password" class="form-control" id="password-phone"
+                                        placeholder="Tu contraseña" required>
+                                    <button type="button" class="password-toggle"
+                                        onclick="togglePassword('password-phone')">
+                                        <i class="bi bi-eye"></i>
+                                    </button>
+                                    <div class="invalid-feedback">
+                                        La contraseña es obligatoria.
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mb-4 form-check">
+                                <input type="checkbox" class="form-check-input" id="remember-phone">
+                                <label class="form-check-label" for="remember-phone">Recordarme</label>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary w-100">Iniciar sesión</button>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="register-link">
+                    <p>¿No tienes una cuenta? <a th:href="@{/usuarios/registro}">Regístrate</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast notification -->
+    <div class="toast-container">
+        <div class="toast" role="alert" aria-live="assertive" aria-atomic="true" id="loginToast">
+            <div class="toast-header">
+                <strong class="me-auto">AddVenture</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body">
+                Inicio de sesión exitoso. Bienvenido de nuevo a AddVenture.
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

@@ -28,5 +28,13 @@ public interface UsuarioService {
      */
     boolean existeEmail(String email);
 
+
+    /**
+     * Busca y retorna un usuario por su correo electrónico.
+     *
+     * @param email el correo electrónico del usuario a buscar
+     * @return un objeto con la información del usuario, o null si no se encuentra
+     */
+    RegistroUsuarioDTO buscarPorEmail(String email);
 }
 
