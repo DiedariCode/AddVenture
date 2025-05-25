@@ -29,6 +29,7 @@ public class SesionController {
 
     @GetMapping("/logout")
     public String logoutPage() {
-        return "redirect:/auth/login?logout=true";
+        //return "redirect:/auth/login?logout=true";
+        return "redirect:/";
     }
 }

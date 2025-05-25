@@ -44,4 +44,18 @@ public class RegistroUsuarioDTO {
 
     @NotBlank
     private String confirmContrasena;
+
+    public String getIniciales() {
+        StringBuilder iniciales = new StringBuilder();
+
+        if (nombre != null && !nombre.isBlank()) {
+            iniciales.append(Character.toUpperCase(nombre.trim().charAt(0)));
+        }
+
+        if (apellido != null && !apellido.isBlank()) {
+            iniciales.append(Character.toUpperCase(apellido.trim().charAt(0)));
+        }
+
+        return iniciales.toString();
+    }
 }

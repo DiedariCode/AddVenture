@@ -1,6 +1,7 @@
 package com.add.venture.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -22,19 +23,25 @@ public class HomeController {
     public String indexForm(Model model) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        // Mostrar toda la información en consola para depurar
-        System.out.println("Authentication class: " + authentication.getClass().getName());
-        System.out.println("Principal: " + authentication.getPrincipal());
-        System.out.println("Credentials: " + authentication.getCredentials());
-        System.out.println("Authorities: " + authentication.getAuthorities());
-        System.out.println("Details: " + authentication.getDetails());
-        
+        // Solo proceder si está autenticado y no es "anonymousUser"
+        if (authentication != null && authentication.isAuthenticated()
+                && !authentication.getPrincipal().equals("anonymousUser")) {
 
-        String correo = authentication.getName(); // Aquí obtienes el username QUE ES EL CORREO
+            String correo = authentication.getName(); // correo del usuario autenticado
+            RegistroUsuarioDTO usuario = usuarioService.buscarPorEmail(correo);
 
-        RegistroUsuarioDTO usuario = usuarioService.buscarPorEmail(correo);
-        System.out.println("Name: " + usuario.getNombre());
-        model.addAttribute("username", usuario);
+            if (usuario != null) {
+
+                String iniciales = usuario.getIniciales();
+                model.addAttribute("iniciales", iniciales);
+                model.addAttribute("username", usuario);
+            } else {
+                System.out.println("Usuario no encontrado con correo: " + correo);
+            }
+        } else {
+            System.out.println("No hay usuario autenticado");
+        }
+
         return "index";
     }
 
