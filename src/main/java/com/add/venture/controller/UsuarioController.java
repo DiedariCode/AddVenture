@@ -29,12 +29,20 @@ public class UsuarioController {
     public String procesarFormulario(@ModelAttribute("usuario") RegistroUsuarioDTO dto,
             RedirectAttributes redirectAttributes,
             Model model) {
+                
         // Validar que contrasena y confirmContrasena sean iguales
         if (!dto.getContrasena().equals(dto.getConfirmContrasena())) {
             model.addAttribute("error", "Las contraseñas no coinciden");
-            return "auth/registrarse"; 
+            return "auth/registrarse";
         }
 
+        // Validar si el nombre de usuario ya existe
+        if (usuarioService.existeNombreUsuario(dto.getNombreUsuario())) {
+            model.addAttribute("error", "El nombre de usuario ya está en uso");
+            return "auth/registrarse";
+        }
+
+        // Si todo está bien, crear el usuario
         usuarioService.crearUsuario(dto);
         redirectAttributes.addFlashAttribute("mensaje", "Registro exitoso");
         return "redirect:/usuarios/registro";

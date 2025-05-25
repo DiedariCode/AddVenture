@@ -40,4 +40,9 @@ public class UsuarioServiceImpl implements UsuarioService {
         usuario.setEstadoCuenta("ACTIVA");
         usuarioRepository.save(usuario);
     }
+
+    @Override
+    public boolean existeNombreUsuario(String nombreUsuario) {
+        return usuarioRepository.existsByNombreUsuario(nombreUsuario);
+    }
 }
