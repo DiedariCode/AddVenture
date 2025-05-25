@@ -45,4 +45,9 @@ public class UsuarioServiceImpl implements UsuarioService {
     public boolean existeNombreUsuario(String nombreUsuario) {
         return usuarioRepository.existsByNombreUsuario(nombreUsuario);
     }
+
+    @Override
+    public boolean existeEmail(String email) {
+        return usuarioRepository.existsByEmail(email);
+    }
 }

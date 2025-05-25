@@ -55,12 +55,8 @@
                                 <div class="step-circle">2</div>
                                 <span class="step-text">Email</span>
                             </div>
-                            <div class="step" id="step-indicator-3">
-                                <div class="step-circle">3</div>
-                                <span class="step-text">Teléfono</span>
-                            </div>
                             <div class="step" id="step-indicator-4">
-                                <div class="step-circle">4</div>
+                                <div class="step-circle">3</div>
                                 <span class="step-text">Completado</span>
                             </div>
                         </div>
@@ -138,9 +134,16 @@
                                     <label for="email" class="form-label">
                                         <i class="fa-regular fa-envelope me-2"></i>Email
                                     </label>
-                                    <input type="email" class="form-control" id="email" placeholder="tu@email.com"
-                                        th:field="*{email}" required>
+                                    <div class="input-group">
+                                        <input type="email" class="form-control" id="email" placeholder="tu@email.com"
+                                            th:field="*{email}" required>
+                                        <span class="input-group-text d-none" id="email-status"></span>
+                                    </div>
+                                    <small id="advertencia-email" style="display:none;" class="text-danger">
+                                        Este correo ya está registrado. Intenta con otro.
+                                    </small>
                                 </div>
+
 
                                 <div class="mb-3">
                                     <label for="telefono" class="form-label">
@@ -148,10 +151,17 @@
                                     </label>
                                     <div class="input-group">
                                         <span class="country-code" id="country-code">+51</span>
-                                        <input type="tel" class="form-control phone-input" id="telefono"
+                                        <input type="number" class="form-control phone-input" id="telefono"
                                             placeholder="612 345 678" th:field="*{telefono}" required>
+                                        <!-- Aquí va el ícono de estado (válido/inválido) -->
+                                        <span id="telefono-status" class="input-group-text"></span>
+                                    </div>
+                                    <!-- Mensaje de advertencia, oculto por defecto -->
+                                    <div id="advertencia-telefono" class="form-text text-danger" style="display: none;">
+                                        Número de teléfono inválido. Debe tener 9 dígitos y empezar con 6, 7 o 9.
                                     </div>
                                 </div>
+
 
                                 <div class="mb-3">
                                     <label for="password" class="form-label">
@@ -185,7 +195,7 @@
                                         </div>
                                         <div>
                                             <h5 class="mb-0 fw-medium">Verificación de email</h5>
-                                            <p class="mb-0 small">Paso 2 de 4</p>
+                                            <p class="mb-0 small">Paso 2 de 3</p>
                                         </div>
                                     </div>
                                     <p class="mb-0 small">
@@ -214,8 +224,8 @@
                                     email</button>
                             </div>
 
-                            <!-- Paso 4: Completado -->
-                            <div class="form-step" id="step-4">
+                            <!-- Paso 3: Completado -->
+                            <div class="form-step" id="step-3">
                                 <div class="text-center mb-4">
                                     <div class="completion-icon">
                                         <i class="fas fa-shield-alt"></i>

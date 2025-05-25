@@ -19,5 +19,14 @@ public interface UsuarioService {
      */
     boolean existeNombreUsuario(String nombreUsuario);
 
+
+    /**
+     * Verifica si un email ya existe en la base de datos.
+     *
+     * @param email el email a verificar
+     * @return true si el email ya existe, false en caso contrario
+     */
+    boolean existeEmail(String email);
+
 }
 

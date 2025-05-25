@@ -22,4 +22,10 @@ public class UsuarioRestController {
         boolean existe = usuarioService.existeNombreUsuario(username);
         return ResponseEntity.ok(existe);
     }
+
+    @GetMapping("/existe-email")
+    public ResponseEntity<Boolean> verificarEmail(@RequestParam String email) {
+        boolean existe = usuarioService.existeEmail(email);
+        return ResponseEntity.ok(existe);
+    }
 }

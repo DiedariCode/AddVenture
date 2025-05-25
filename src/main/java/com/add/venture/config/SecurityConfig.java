@@ -42,5 +42,4 @@ public class SecurityConfig {
                 .httpBasic(Customizer.withDefaults()); // ¡esto es clave!
         return http.build();
     }
-
 }
