@@ -11,6 +11,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.add.venture.dto.PerfilUsuarioDTO;
 import com.add.venture.dto.RegistroUsuarioDTO;
@@ -109,15 +110,17 @@ public class UsuarioServiceImpl implements IUsuarioService {
                         usuario.getPais(),
                         usuario.getCiudad(),
                         usuario.getFechaNacimiento(),
-                        usuario.getDescripcion())) // Biografía se puede agregar más adelante
+                        usuario.getDescripcion(),
+                        usuario.getFotoPerfil(), // <-- asumiendo que son String
+                        usuario.getFotoPortada(),
+                        usuario.getFechaRegistro()))
                 .orElse(null);
     }
 
     @Override
-    public void actualizarPerfil(PerfilUsuarioDTO dto) {
-        // Obtener el usuario autenticado desde el contexto de seguridad
+    public void actualizarPerfil(PerfilUsuarioDTO dto, MultipartFile imagenPerfil, MultipartFile imagenPortada) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        String email = auth.getName(); // Esto es el email
+        String email = auth.getName();
 
         Usuario usuario = usuarioRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
@@ -125,7 +128,6 @@ public class UsuarioServiceImpl implements IUsuarioService {
         usuario.setNombre(dto.getNombre());
         usuario.setApellidos(dto.getApellido());
 
-        // Validar y actualizar username sólo si cambió y no existe otro igual
         if (!usuario.getNombreUsuario().equals(dto.getUsername())) {
             if (usuarioRepository.existsByNombreUsuario(dto.getUsername())) {
                 throw new RuntimeException("El nombre de usuario ya está en uso");
@@ -139,13 +141,61 @@ public class UsuarioServiceImpl implements IUsuarioService {
         usuario.setFechaNacimiento(dto.getFechaNacimiento());
         usuario.setDescripcion(dto.getBiografia());
 
+        // Manejo de imágenes: eliminar la antigua antes de guardar la nueva
+        if (imagenPerfil != null && !imagenPerfil.isEmpty()) {
+            // Eliminar imagen antigua de perfil
+            if (usuario.getFotoPerfil() != null && !usuario.getFotoPerfil().isEmpty()) {
+                try {
+                    java.nio.file.Path pathAntiguoPerfil = java.nio.file.Paths
+                            .get("uploads/" + usuario.getFotoPerfil());
+                    java.nio.file.Files.deleteIfExists(pathAntiguoPerfil);
+                } catch (Exception e) {
+                    e.printStackTrace(); // puedes cambiar por un logger
+                }
+            }
+            String nombreArchivoPerfil = guardarArchivo(imagenPerfil);
+            usuario.setFotoPerfil(nombreArchivoPerfil);
+        }
+
+        if (imagenPortada != null && !imagenPortada.isEmpty()) {
+            // Eliminar imagen antigua de portada
+            if (usuario.getFotoPortada() != null && !usuario.getFotoPortada().isEmpty()) {
+                try {
+                    java.nio.file.Path pathAntiguoPortada = java.nio.file.Paths
+                            .get("uploads/" + usuario.getFotoPortada());
+                    java.nio.file.Files.deleteIfExists(pathAntiguoPortada);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            String nombreArchivoPortada = guardarArchivo(imagenPortada);
+            usuario.setFotoPortada(nombreArchivoPortada);
+        }
+
         usuarioRepository.save(usuario);
 
-        // Reautenticar con el email como username
+        // Reautenticación
         UserDetails userDetails = usuarioDetallesService.loadUserByUsername(usuario.getEmail());
         Authentication newAuth = new UsernamePasswordAuthenticationToken(
                 userDetails, userDetails.getPassword(), userDetails.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(newAuth);
+    }
+
+    private String guardarArchivo(MultipartFile archivo) {
+        try {
+            String originalFilename = archivo.getOriginalFilename();
+            String extension = originalFilename.substring(originalFilename.lastIndexOf('.'));
+            String nuevoNombre = java.util.UUID.randomUUID().toString() + extension;
+
+            String ruta = "uploads/"; // crea esta carpeta dentro de /src/main/resources/static
+            java.nio.file.Path path = java.nio.file.Paths.get(ruta + nuevoNombre);
+            java.nio.file.Files.createDirectories(path.getParent());
+            archivo.transferTo(path);
+
+            return nuevoNombre;
+        } catch (Exception e) {
+            throw new RuntimeException("Error al guardar archivo", e);
+        }
     }
 
     @Override

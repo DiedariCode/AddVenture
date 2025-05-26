@@ -1,5 +1,7 @@
 package com.add.venture.service;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import com.add.venture.dto.PerfilUsuarioDTO;
 import com.add.venture.dto.RegistroUsuarioDTO;
 
@@ -48,15 +50,6 @@ public interface IUsuarioService {
      */
     PerfilUsuarioDTO buscarPerfilPorEmail(String email);
 
-
-    /**
-     * Actualiza el perfil de un usuario en la base de datos.
-     *
-     * @param dto el objeto DTO que contiene la información actualizada del perfil
-     */
-    void actualizarPerfil(PerfilUsuarioDTO dto);
-
-
     /**
      * Verifica si un nombre de usuario ya existe, excluyendo el usuario actual.
      *
@@ -65,5 +58,15 @@ public interface IUsuarioService {
      * @return true si el nombre de usuario ya existe para otro usuario, false en caso contrario
      */
     boolean existeNombreUsuarioExceptoActual(String nombreUsuario, String emailActual);
+
+
+    /**
+     * Actualiza el perfil de un usuario, incluyendo la subida de imágenes de perfil y portada.
+     *
+     * @param dto el objeto DTO que contiene la información actualizada del perfil
+     * @param imagenPerfil la imagen de perfil a subir
+     * @param imagenPortada la imagen de portada a subir
+     */
+    void actualizarPerfil(PerfilUsuarioDTO dto, MultipartFile imagenPerfil, MultipartFile imagenPortada);
 }
 

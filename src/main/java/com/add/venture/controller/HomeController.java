@@ -20,6 +20,7 @@ public class HomeController {
     @GetMapping
     public String indexForm(Model model) {
         usuarioHelper.cargarDatosUsuarioParaNavbar(model);
+        usuarioHelper.cargarUsuarioParaPerfil(model);
         return "index";
     }
 

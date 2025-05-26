@@ -25,15 +25,10 @@ public class UsuarioAutenticadoHelper {
             String correo = authentication.getName();
             RegistroUsuarioDTO usuario = usuarioService.buscarPorEmail(correo);
 
-            // System.out.println("Usuario autenticado: " + usuario); // Aquí imprimes el objeto
-            // System.out.println("Correo autenticado: " + correo);
-
             if (usuario != null) {
                 model.addAttribute("iniciales", usuario.getIniciales());
                 model.addAttribute("username", usuario);
 
-                // System.out.println("Iniciales: " + usuario.getIniciales());
-                // System.out.println("Nombre Usuario: " + usuario.getNombreUsuario()); // Asegúrate que exista este getter
                 model.addAttribute("iniciales", usuario.getIniciales());
                 model.addAttribute("username", usuario);
             }
@@ -47,10 +42,11 @@ public class UsuarioAutenticadoHelper {
                 && !authentication.getPrincipal().equals("anonymousUser")) {
 
             String correo = authentication.getName();
-            PerfilUsuarioDTO usuario = usuarioService.buscarPerfilPorEmail(correo);
-            if (usuario != null) {
-                model.addAttribute("iniciales", usuario.getIniciales());
-                model.addAttribute("usuario", usuario); // para formulario de edición
+            PerfilUsuarioDTO usuariodDto = usuarioService.buscarPerfilPorEmail(correo);
+            if (usuariodDto != null) {
+                model.addAttribute("iniciales", usuariodDto.getIniciales());
+                System.out.println("imagenPortada: " + usuariodDto.getImagenPortada());
+                model.addAttribute("usuario", usuariodDto); // para formulario de edición
             }
         }
     }

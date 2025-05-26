@@ -26,7 +26,6 @@ body {
     font-weight: 700;
 }
 
-/* Navbar styles */
 .avatar-circle {
     width: 40px;
     height: 40px;
@@ -37,6 +36,21 @@ body {
     font-size: 16px;
     font-weight: 600;
     border: 2px solid white;
+    position: relative;
+    /* para posicionar la img absoluta dentro */
+    overflow: hidden;
+    /* recorta la imagen para que no se salga del círculo */
+}
+
+.avatar-circle img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+    position: absolute;
+    /* opcional, puedes probar sin esto */
+    top: 0;
+    left: 0;
 }
 
 .btn-primary {
