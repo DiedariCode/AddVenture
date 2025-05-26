@@ -78,409 +78,433 @@
                     </div>
 
                     <div class="tab-content" id="configTabsContent">
-                        <!-- Cuenta y perfil -->
-                        <div class="tab-pane fade show active" id="cuenta" role="tabpanel" aria-labelledby="cuenta-tab">
-                            <div class="card shadow-sm">
-                                <div class="card-header">
-                                    <h5 class="card-title mb-0">Información de perfil</h5>
-                                    <p class="card-text text-muted small">Actualiza tu información personal y
-                                        preferencias</p>
-                                </div>
-                                <div class="card-body">
-                                    <div class="mb-4">
-                                        <label class="form-label mb-2">Imagen de portada</label>
-                                        <div class="position-relative rounded overflow-hidden mb-2"
-                                            style="height: 160px; background-color: #f8f9fa;">
-                                            <div id="cover-preview"
-                                                class="w-100 h-100 d-flex align-items-center justify-content-center">
-                                                <i class="bi bi-upload fs-3 text-secondary"></i>
-                                            </div>
-                                        </div>
-                                        <div class="d-flex justify-content-center">
-                                            <label for="cover-upload"
-                                                class="btn btn-outline-primary d-flex align-items-center gap-2">
-                                                <i class="bi bi-upload"></i>
-                                                <span>Cambiar imagen de portada</span>
-                                                <input id="cover-upload" type="file" class="d-none" accept="image/*">
-                                            </label>
-                                        </div>
+                            <!-- Cuenta y perfil -->
+                            <div class="tab-pane fade show active" id="cuenta" role="tabpanel"
+                                aria-labelledby="cuenta-tab">
+                                <div class="card shadow-sm">
+                                    <div class="card-header">
+                                        <h5 class="card-title mb-0">Información de perfil</h5>
+                                        <p class="card-text text-muted small">Actualiza tu información personal y
+                                            preferencias</p>
                                     </div>
+                                    <div class="card-body">
 
-                                    <div class="d-flex justify-content-center mt-4 mb-4">
-                                        <div class="position-relative">
-                                            <div class="avatar bg-primary-subtle text-primary rounded-circle d-flex align-items-center justify-content-center border border-4 border-white shadow"
-                                                style="width: 96px; height: 96px;">
-                                                <span class="fs-3 fw-medium" id="avatar-initials"
-                                                    th:text="${iniciales}">MR</span>
-                                                <div id="profile-preview"
-                                                    class="w-100 h-100 rounded-circle overflow-hidden position-absolute top-0 start-0"
-                                                    style="display: none;"></div>
+                                        <form id="profile-form" class="mt-4" method="post" th:object="${usuario}"
+                                            th:action="@{/perfil/configuracion}" enctype="multipart/form-data">
+
+                                            <input type="hidden" th:name="${_csrf.parameterName}"
+                                                th:value="${_csrf.token}">
+
+                                            <!-- Imagen de portada -->
+                                            <div class="mb-4">
+                                                <label class="form-label mb-2">Imagen de portada</label>
+                                                <div class="position-relative rounded overflow-hidden mb-2"
+                                                    style="height: 160px; background-color: #f8f9fa;">
+                                                    <div id="cover-preview"
+                                                        class="w-100 h-100 d-flex align-items-center justify-content-center">
+                                                        <i class="bi bi-upload fs-3 text-secondary"></i>
+                                                    </div>
+                                                </div>
+                                                <div class="d-flex justify-content-center">
+                                                    <label for="cover-upload"
+                                                        class="btn btn-outline-primary d-flex align-items-center gap-2">
+                                                        <i class="bi bi-upload"></i>
+                                                        <span>Cambiar imagen de portada</span>
+                                                        <input id="cover-upload" name="imagenPortada" type="file"
+                                                            class="d-none" accept="image/*">
+                                                    </label>
+                                                </div>
                                             </div>
-                                            <label for="profile-upload"
-                                                class="position-absolute bottom-0 end-0 rounded-circle bg-primary text-white d-flex align-items-center justify-content-center"
-                                                style="width: 32px; height: 32px; cursor: pointer;">
-                                                <i class="bi bi-camera"></i>
-                                                <input id="profile-upload" type="file" class="d-none" accept="image/*">
-                                            </label>
-                                        </div>
-                                    </div>
 
-                                    <hr>
-
-                                    <form id="profile-form" class="mt-4" method="post" th:object="${usuario}"
-                                        th:action="@{/perfil/configuracion}">
-
-                                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
-
-                                        <div class="row mb-3">
-                                            <div class="col-md-6 mb-3 mb-md-0">
-                                                <label for="nombre" class="form-label d-flex align-items-center gap-2">
-                                                    <i class="bi bi-person"></i> Nombres
-                                                </label>
-                                                <input type="text" class="form-control" id="nombre"
-                                                    th:field="*{nombre}">
+                                            <!-- Imagen de perfil -->
+                                            <div class="d-flex justify-content-center mt-4 mb-4">
+                                                <div class="position-relative">
+                                                    <div class="avatar bg-primary-subtle text-primary rounded-circle d-flex align-items-center justify-content-center border border-4 border-white shadow"
+                                                        style="width: 96px; height: 96px;">
+                                                        <span class="fs-3 fw-medium" id="avatar-initials"
+                                                            th:text="${iniciales}">MR</span>
+                                                        <div id="profile-preview"
+                                                            class="w-100 h-100 rounded-circle overflow-hidden position-absolute top-0 start-0"
+                                                            style="display: none;"></div>
+                                                    </div>
+                                                    <label for="profile-upload"
+                                                        class="position-absolute bottom-0 end-0 rounded-circle bg-primary text-white d-flex align-items-center justify-content-center"
+                                                        style="width: 32px; height: 32px; cursor: pointer;">
+                                                        <i class="bi bi-camera"></i>
+                                                        <input id="profile-upload" name="imagenPerfil" type="file"
+                                                            class="d-none" accept="image/*">
+                                                    </label>
+                                                </div>
                                             </div>
-                                            <div class="col-md-6 mb-3 mb-md-0">
-                                                <label for="apellido"
+
+                                            <hr>
+
+                                            <div class="row mb-3">
+                                                <div class="col-md-6 mb-3 mb-md-0">
+                                                    <label for="nombre"
+                                                        class="form-label d-flex align-items-center gap-2">
+                                                        <i class="bi bi-person"></i> Nombres
+                                                    </label>
+                                                    <input type="text" class="form-control" id="nombre"
+                                                        th:field="*{nombre}">
+                                                </div>
+                                                <div class="col-md-6 mb-3 mb-md-0">
+                                                    <label for="apellido"
+                                                        class="form-label d-flex align-items-center gap-2">Apellidos</label>
+                                                    <input type="text" class="form-control" id="apellido"
+                                                        th:field="*{apellido}">
+                                                </div>
+                                            </div>
+
+                                            <div class="row mb-3">
+                                                <div class="col-md-12">
+                                                    <label for="nombreUsuario" class="form-label"><i
+                                                            class="fa-regular fa-at me-2"></i>Nombre de usuario</label>
+                                                    <input type="text" class="form-control" id="nombreUsuario"
+                                                        th:field="*{username}">
+                                                    <div class="username-status" id="username-status"></div>
+                                                </div>
+                                                <small id="advertencia-username" class="text-danger"
+                                                    style="display: none;">
+                                                    Este nombre de usuario ya está en uso.
+                                                </small>
+                                            </div>
+
+                                            <div class="row mb-3">
+                                                <div class="col-md-6 mb-3 mb-md-0">
+                                                    <label for="email"
+                                                        class="form-label d-flex align-items-center gap-2">
+                                                        <i class="bi bi-envelope"></i> Correo electrónico
+                                                    </label>
+                                                    <input type="email" class="form-control" id="email"
+                                                        th:field="*{email}" readonly>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label for="phone"
+                                                        class="form-label d-flex align-items-center gap-2">
+                                                        <i class="bi bi-telephone"></i> Teléfono
+                                                    </label>
+                                                    <div class="input-group">
+                                                        <span class="input-group-text bg-light">+51</span>
+                                                        <input type="tel" class="form-control" id="phone"
+                                                            th:field="*{telefono}" readonly>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="row mb-3">
+                                                <div class="col-md-6 mb-3 mb-md-0">
+                                                    <label for="country"
+                                                        class="form-label d-flex align-items-center gap-2">
+                                                        <i class="bi bi-globe"></i> País
+                                                    </label>
+                                                    <select class="form-select" id="country" th:field="*{pais}">
+                                                        <option value="Perú">Perú</option>
+                                                        <option value="" disabled>Próximamente más países</option>
+                                                    </select>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label for="location"
+                                                        class="form-label d-flex align-items-center gap-2">
+                                                        <i class="bi bi-geo-alt"></i> Ciudad
+                                                    </label>
+                                                    <input type="text" class="form-control" id="location"
+                                                        th:field="*{ciudad}">
+                                                </div>
+                                            </div>
+
+                                            <div class="mb-3">
+                                                <label for="birthDate"
                                                     class="form-label d-flex align-items-center gap-2">
-                                                    Apellidos</label>
-                                                <input type="text" class="form-control" id="apellido"
-                                                    th:field="*{apellido}">
-                                            </div>
-                                        </div>
-                                        <div class="row mb-3">
-                                            <div class="col-md-12">
-                                                <label for="nombreUsuario" class="form-label"><i
-                                                        class="fa-regular fa-at me-2"></i>Nombre de usuario</label>
-                                                <input type="text" class="form-control" id="nombreUsuario"
-                                                    th:field="*{username}">
-                                                <div class="username-status" id="username-status"></div>
-                                            </div>
-                                            <small id="advertencia-username" class="text-danger" style="display: none;">
-                                                Este nombre de usuario ya está en uso.
-                                            </small>
-                                        </div>
-
-                                        <div class="row mb-3">
-                                            <div class="col-md-6 mb-3 mb-md-0">
-                                                <label for="email" class="form-label d-flex align-items-center gap-2">
-                                                    <i class="bi bi-envelope"></i> Correo electrónico
+                                                    <i class="bi bi-calendar"></i> Fecha de nacimiento
                                                 </label>
-                                                <input type="email" class="form-control" id="email" th:field="*{email}"
-                                                    readonly>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <label for="phone" class="form-label d-flex align-items-center gap-2">
-                                                    <i class="bi bi-telephone"></i> Teléfono
-                                                </label>
-                                                <div class="input-group">
-                                                    <span class="input-group-text bg-light">+51</span>
-                                                    <input type="tel" class="form-control" id="phone"
-                                                        th:field="*{telefono}" readonly>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="row mb-3">
-                                            <div class="col-md-6 mb-3 mb-md-0">
-                                                <label for="country" class="form-label d-flex align-items-center gap-2">
-                                                    <i class="bi bi-globe"></i> País
-                                                </label>
-                                                <select class="form-select" id="country" th:field="*{pais}">
-                                                    <option value="Perú">Perú</option>
-                                                    <option value="" disabled>Proximamente mas paises</option>
-                                                </select>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <label for="location"
-                                                    class="form-label d-flex align-items-center gap-2">
-                                                    <i class="bi bi-geo-alt"></i> Ciudad
-                                                </label>
-                                                <input type="text" class="form-control" id="location"
-                                                    th:field="*{ciudad}">
-                                            </div>
-                                        </div>
-
-                                        <div class="mb-3">
-                                            <!-- Debug: pruebas
-                                            <p>Debug - Fecha: <span th:text="${usuario.fechaNacimiento}"></span></p>
-                                            <p>Debug - Usuario completo: <span th:text="${usuario}"></span></p> -->
-
-                                            <label for="birthDate" class="form-label d-flex align-items-center gap-2">
-                                                <i class="bi bi-calendar"></i> Fecha de nacimiento
-                                            </label>
-                                            <div class="d-flex align-items-center gap-3">
-                                                <input type="date" class="form-control" id="birthDate"
-                                                    name="fechaNacimiento" th:value="${usuario.fechaNacimiento}">
-                                                <div
-                                                    class="bg-primary-subtle px-3 py-2 rounded text-primary d-flex align-items-center gap-1">
-                                                    <i class="bi bi-info-circle"></i>
-                                                    <span id="age-display" th:text="${usuario.getEdad()} + años">28
-                                                        años</span>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="mb-3">
-                                            <label for="bio" class="form-label">Biografía</label>
-                                            <textarea class="form-control" id="bio" rows="4" th:field="*{biografia}"
-                                                placeholder="Cuéntanos sobre ti...">
-                                            </textarea>
-                                        </div>
-
-                                        <div class="card-footer d-flex justify-content-end">
-                                            <button type="submit" id="save-profile-btn"
-                                                class="btn btn-primary d-flex align-items-center gap-2">
-                                                <i class="bi bi-save"></i>
-                                                Guardar cambios
-                                            </button>
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Preferencias de viaje -->
-                        <div class="tab-pane fade" id="preferencias" role="tabpanel" aria-labelledby="preferencias-tab">
-                            <div class="card shadow-sm">
-                                <div class="card-header">
-                                    <h5 class="card-title mb-0">Preferencias de viaje</h5>
-                                    <p class="card-text text-muted small">Personaliza tus preferencias para encontrar
-                                        los mejores grupos</p>
-                                </div>
-                                <div class="card-body">
-                                    <div class="mb-4">
-                                        <h5 class="fw-medium mb-3">Tipos de viaje favoritos</h5>
-                                        <div class="row g-3">
-                                            <div class="col-md-4">
-                                                <div class="form-check d-flex align-items-start gap-2">
-                                                    <input class="form-check-input mt-1" type="checkbox" id="adventure"
-                                                        checked>
-                                                    <div>
-                                                        <label class="form-check-label d-flex align-items-center gap-1"
-                                                            for="adventure">
-                                                            <i class="bi bi-mountain text-primary"></i> Aventura
-                                                        </label>
-                                                        <p class="text-muted small">Senderismo, camping, deportes
-                                                            extremos</p>
+                                                <div class="d-flex align-items-center gap-3">
+                                                    <input type="date" class="form-control" id="birthDate"
+                                                        name="fechaNacimiento" th:value="${usuario.fechaNacimiento}">
+                                                    <div
+                                                        class="bg-primary-subtle px-3 py-2 rounded text-primary d-flex align-items-center gap-1">
+                                                        <i class="bi bi-info-circle"></i>
+                                                        <span id="age-display"
+                                                            th:text="${usuario.getEdad()} + ' años'">28 años</span>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="col-md-4">
-                                                <div class="form-check d-flex align-items-start gap-2">
-                                                    <input class="form-check-input mt-1" type="checkbox" id="cultural"
-                                                        checked>
-                                                    <div>
-                                                        <label class="form-check-label d-flex align-items-center gap-1"
-                                                            for="cultural">
-                                                            <i class="bi bi-flag text-purple"></i> Cultural
-                                                        </label>
-                                                        <p class="text-muted small">Museos, monumentos, historia local
-                                                        </p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <div class="form-check d-flex align-items-start gap-2">
-                                                    <input class="form-check-input mt-1" type="checkbox" id="beach"
-                                                        checked>
-                                                    <div>
-                                                        <label class="form-check-label d-flex align-items-center gap-1"
-                                                            for="beach">
-                                                            <i class="bi bi-umbrella text-warning"></i> Playa
-                                                        </label>
-                                                        <p class="text-muted small">Relax, sol, deportes acuáticos</p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <div class="form-check d-flex align-items-start gap-2">
-                                                    <input class="form-check-input mt-1" type="checkbox" id="mountain">
-                                                    <div>
-                                                        <label class="form-check-label d-flex align-items-center gap-1"
-                                                            for="mountain">
-                                                            <i class="bi bi-mountain text-success"></i> Montaña
-                                                        </label>
-                                                        <p class="text-muted small">Esquí, snowboard, paisajes</p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <div class="form-check d-flex align-items-start gap-2">
-                                                    <input class="form-check-input mt-1" type="checkbox" id="city">
-                                                    <div>
-                                                        <label class="form-check-label d-flex align-items-center gap-1"
-                                                            for="city">
-                                                            <i class="bi bi-building text-secondary"></i> Ciudad
-                                                        </label>
-                                                        <p class="text-muted small">Turismo urbano, compras, vida
-                                                            nocturna</p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <div class="form-check d-flex align-items-start gap-2">
-                                                    <input class="form-check-input mt-1" type="checkbox"
-                                                        id="gastronomy">
-                                                    <div>
-                                                        <label class="form-check-label d-flex align-items-center gap-1"
-                                                            for="gastronomy">
-                                                            <i class="bi bi-cup-hot text-danger"></i> Gastronomía
-                                                        </label>
-                                                        <p class="text-muted small">Comida local, rutas gastronómicas
-                                                        </p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
 
-                                    <hr>
-
-                                    <div class="mb-4">
-                                        <h5 class="fw-medium mb-3">Rango de edad preferido</h5>
-                                        <p class="text-muted small">Prefiero viajar con personas entre:</p>
-                                        <div class="row">
-                                            <div class="col-md-6 mb-3">
-                                                <label for="ageMin" class="form-label">Edad mínima</label>
-                                                <div class="input-group">
-                                                    <input type="number" class="form-control" id="ageMin" min="18"
-                                                        max="80" value="25">
-                                                    <span class="input-group-text">años</span>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6 mb-3">
-                                                <label for="ageMax" class="form-label">Edad máxima</label>
-                                                <div class="input-group">
-                                                    <input type="number" class="form-control" id="ageMax" min="18"
-                                                        max="80" value="40">
-                                                    <span class="input-group-text">años</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="alert alert-primary d-flex align-items-center gap-2" role="alert">
-                                            <i class="bi bi-info-circle"></i>
-                                            <span>Te mostraremos grupos con viajeros entre <span
-                                                    id="age-range-display">25 y 40</span> años</span>
-                                        </div>
-                                    </div>
-
-                                    <hr>
-                                </div>
-                                <div class="card-footer d-flex justify-content-end">
-                                    <button type="button" id="save-preferences-btn"
-                                        class="btn btn-primary d-flex align-items-center gap-2">
-                                        <i class="bi bi-save"></i>
-                                        Guardar preferencias
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Seguridad y verificación -->
-                        <div class="tab-pane fade" id="seguridad" role="tabpanel" aria-labelledby="seguridad-tab">
-                            <div class="card shadow-sm mb-4">
-                                <div class="card-header">
-                                    <h5 class="card-title mb-0">Seguridad y verificación</h5>
-                                    <p class="card-text text-muted small">Gestiona la seguridad de tu cuenta y tu estado
-                                        de verificación</p>
-                                </div>
-                                <div class="card-body">
-                                    <!-- Estado de verificación -->
-                                    <div class="alert alert-primary mb-4">
-                                        <h5 class="fw-medium text-primary mb-2 d-flex align-items-center gap-2">
-                                            <i class="bi bi-shield"></i>
-                                            Estado de verificación
-                                        </h5>
-
-                                        <div class="mb-3">
-                                            <p class="text-primary">
-                                                Para obtener el emblema de verificación completa necesitas:
-                                            </p>
-
-                                            <ul class="list-unstyled mb-3">
-                                                <li class="d-flex align-items-center gap-2 mb-2"
-                                                    id="verification-requirement">
-                                                    <!-- Will be filled by JavaScript -->
-                                                </li>
-                                            </ul>
-
-                                            <div id="verification-badge-status">
-                                                <!-- Will be filled by JavaScript -->
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <hr>
-
-                                    <!-- Información de contacto -->
-                                    <div class="mb-4">
-                                        <h5 class="fw-medium mb-3">Información de contacto</h5>
-                                        <div class="mb-3 d-flex justify-content-between align-items-center">
-                                            <div class="d-flex align-items-center gap-2">
-                                                <i class="bi bi-envelope text-secondary"></i>
-                                                <span>maria@example.com</span>
-                                            </div>
-                                            <span class="badge bg-success">Verificado</span>
-                                        </div>
-
-                                        <div class="d-flex justify-content-between align-items-center">
-                                            <div class="d-flex align-items-center gap-2">
-                                                <i class="bi bi-telephone text-secondary"></i>
-                                                <span>+34 612 345 678</span>
-                                            </div>
-                                            <span class="badge bg-success">Verificado</span>
-                                        </div>
-                                    </div>
-
-                                    <hr>
-
-                                    <!-- Cambio de contraseña -->
-                                    <div>
-                                        <h5 class="fw-medium mb-3">Cambiar contraseña</h5>
-                                        <form class="mb-3">
                                             <div class="mb-3">
-                                                <label for="current-password" class="form-label">Contraseña
-                                                    actual</label>
-                                                <input type="password" class="form-control" id="current-password">
+                                                <label for="bio" class="form-label">Biografía</label>
+                                                <textarea class="form-control" id="bio" rows="4" th:field="*{biografia}"
+                                                    placeholder="Cuéntanos sobre ti..."></textarea>
                                             </div>
-                                            <div class="mb-3">
-                                                <label for="new-password" class="form-label">Nueva contraseña</label>
-                                                <input type="password" class="form-control" id="new-password">
+
+                                            <div class="card-footer d-flex justify-content-end">
+                                                <button type="submit" id="save-profile-btn"
+                                                    class="btn btn-primary d-flex align-items-center gap-2">
+                                                    <i class="bi bi-save"></i> Guardar cambios
+                                                </button>
                                             </div>
-                                            <div class="mb-3">
-                                                <label for="confirm-password" class="form-label">Confirmar
-                                                    contraseña</label>
-                                                <input type="password" class="form-control" id="confirm-password">
-                                            </div>
-                                            <button type="button" class="btn btn-primary w-100">Cambiar
-                                                contraseña</button>
+
                                         </form>
                                     </div>
                                 </div>
                             </div>
 
-                            <div class="card shadow-sm border-danger">
-                                <div class="card-header bg-danger text-white">
-                                    <h5 class="card-title mb-0 d-flex align-items-center gap-2">
-                                        <i class="bi bi-exclamation-triangle"></i>
-                                        Zona de peligro
-                                    </h5>
-                                    <p class="card-text small mb-0">Acciones irreversibles para tu cuenta</p>
-                                </div>
-                                <div class="card-body">
-                                    <div class="alert alert-danger">
-                                        <h5 class="fw-medium mb-2">Eliminar cuenta</h5>
-                                        <p class="small mb-3">
-                                            Una vez elimines tu cuenta, todos tus datos serán borrados permanentemente.
-                                            Esta acción no
-                                            se puede deshacer.
-                                        </p>
-                                        <button type="button" class="btn btn-danger">Eliminar mi cuenta</button>
+                            <!-- Preferencias de viaje -->
+                            <div class="tab-pane fade" id="preferencias" role="tabpanel"
+                                aria-labelledby="preferencias-tab">
+                                <div class="card shadow-sm">
+                                    <div class="card-header">
+                                        <h5 class="card-title mb-0">Preferencias de viaje</h5>
+                                        <p class="card-text text-muted small">Personaliza tus preferencias para
+                                            encontrar
+                                            los mejores grupos</p>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="mb-4">
+                                            <h5 class="fw-medium mb-3">Tipos de viaje favoritos</h5>
+                                            <div class="row g-3">
+                                                <div class="col-md-4">
+                                                    <div class="form-check d-flex align-items-start gap-2">
+                                                        <input class="form-check-input mt-1" type="checkbox"
+                                                            id="adventure" checked>
+                                                        <div>
+                                                            <label
+                                                                class="form-check-label d-flex align-items-center gap-1"
+                                                                for="adventure">
+                                                                <i class="bi bi-mountain text-primary"></i> Aventura
+                                                            </label>
+                                                            <p class="text-muted small">Senderismo, camping, deportes
+                                                                extremos</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div class="form-check d-flex align-items-start gap-2">
+                                                        <input class="form-check-input mt-1" type="checkbox"
+                                                            id="cultural" checked>
+                                                        <div>
+                                                            <label
+                                                                class="form-check-label d-flex align-items-center gap-1"
+                                                                for="cultural">
+                                                                <i class="bi bi-flag text-purple"></i> Cultural
+                                                            </label>
+                                                            <p class="text-muted small">Museos, monumentos, historia
+                                                                local
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div class="form-check d-flex align-items-start gap-2">
+                                                        <input class="form-check-input mt-1" type="checkbox" id="beach"
+                                                            checked>
+                                                        <div>
+                                                            <label
+                                                                class="form-check-label d-flex align-items-center gap-1"
+                                                                for="beach">
+                                                                <i class="bi bi-umbrella text-warning"></i> Playa
+                                                            </label>
+                                                            <p class="text-muted small">Relax, sol, deportes acuáticos
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div class="form-check d-flex align-items-start gap-2">
+                                                        <input class="form-check-input mt-1" type="checkbox"
+                                                            id="mountain">
+                                                        <div>
+                                                            <label
+                                                                class="form-check-label d-flex align-items-center gap-1"
+                                                                for="mountain">
+                                                                <i class="bi bi-mountain text-success"></i> Montaña
+                                                            </label>
+                                                            <p class="text-muted small">Esquí, snowboard, paisajes</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div class="form-check d-flex align-items-start gap-2">
+                                                        <input class="form-check-input mt-1" type="checkbox" id="city">
+                                                        <div>
+                                                            <label
+                                                                class="form-check-label d-flex align-items-center gap-1"
+                                                                for="city">
+                                                                <i class="bi bi-building text-secondary"></i> Ciudad
+                                                            </label>
+                                                            <p class="text-muted small">Turismo urbano, compras, vida
+                                                                nocturna</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div class="form-check d-flex align-items-start gap-2">
+                                                        <input class="form-check-input mt-1" type="checkbox"
+                                                            id="gastronomy">
+                                                        <div>
+                                                            <label
+                                                                class="form-check-label d-flex align-items-center gap-1"
+                                                                for="gastronomy">
+                                                                <i class="bi bi-cup-hot text-danger"></i> Gastronomía
+                                                            </label>
+                                                            <p class="text-muted small">Comida local, rutas
+                                                                gastronómicas
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <hr>
+
+                                        <div class="mb-4">
+                                            <h5 class="fw-medium mb-3">Rango de edad preferido</h5>
+                                            <p class="text-muted small">Prefiero viajar con personas entre:</p>
+                                            <div class="row">
+                                                <div class="col-md-6 mb-3">
+                                                    <label for="ageMin" class="form-label">Edad mínima</label>
+                                                    <div class="input-group">
+                                                        <input type="number" class="form-control" id="ageMin" min="18"
+                                                            max="80" value="25">
+                                                        <span class="input-group-text">años</span>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6 mb-3">
+                                                    <label for="ageMax" class="form-label">Edad máxima</label>
+                                                    <div class="input-group">
+                                                        <input type="number" class="form-control" id="ageMax" min="18"
+                                                            max="80" value="40">
+                                                        <span class="input-group-text">años</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="alert alert-primary d-flex align-items-center gap-2"
+                                                role="alert">
+                                                <i class="bi bi-info-circle"></i>
+                                                <span>Te mostraremos grupos con viajeros entre <span
+                                                        id="age-range-display">25 y 40</span> años</span>
+                                            </div>
+                                        </div>
+
+                                        <hr>
+                                    </div>
+                                    <div class="card-footer d-flex justify-content-end">
+                                        <button type="button" id="save-preferences-btn"
+                                            class="btn btn-primary d-flex align-items-center gap-2">
+                                            <i class="bi bi-save"></i>
+                                            Guardar preferencias
+                                        </button>
                                     </div>
                                 </div>
                             </div>
-                        </div>
+
+                            <!-- Seguridad y verificación -->
+                            <div class="tab-pane fade" id="seguridad" role="tabpanel" aria-labelledby="seguridad-tab">
+                                <div class="card shadow-sm mb-4">
+                                    <div class="card-header">
+                                        <h5 class="card-title mb-0">Seguridad y verificación</h5>
+                                        <p class="card-text text-muted small">Gestiona la seguridad de tu cuenta y tu
+                                            estado
+                                            de verificación</p>
+                                    </div>
+                                    <div class="card-body">
+                                        <!-- Estado de verificación -->
+                                        <div class="alert alert-primary mb-4">
+                                            <h5 class="fw-medium text-primary mb-2 d-flex align-items-center gap-2">
+                                                <i class="bi bi-shield"></i>
+                                                Estado de verificación
+                                            </h5>
+
+                                            <div class="mb-3">
+                                                <p class="text-primary">
+                                                    Para obtener el emblema de verificación completa necesitas:
+                                                </p>
+
+                                                <ul class="list-unstyled mb-3">
+                                                    <li class="d-flex align-items-center gap-2 mb-2"
+                                                        id="verification-requirement">
+                                                        <!-- Will be filled by JavaScript -->
+                                                    </li>
+                                                </ul>
+
+                                                <div id="verification-badge-status">
+                                                    <!-- Will be filled by JavaScript -->
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <hr>
+
+                                        <!-- Información de contacto -->
+                                        <div class="mb-4">
+                                            <h5 class="fw-medium mb-3">Información de contacto</h5>
+                                            <div class="mb-3 d-flex justify-content-between align-items-center">
+                                                <div class="d-flex align-items-center gap-2">
+                                                    <i class="bi bi-envelope text-secondary"></i>
+                                                    <span>maria@example.com</span>
+                                                </div>
+                                                <span class="badge bg-success">Verificado</span>
+                                            </div>
+
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <div class="d-flex align-items-center gap-2">
+                                                    <i class="bi bi-telephone text-secondary"></i>
+                                                    <span>+34 612 345 678</span>
+                                                </div>
+                                                <span class="badge bg-success">Verificado</span>
+                                            </div>
+                                        </div>
+
+                                        <hr>
+
+                                        <!-- Cambio de contraseña -->
+                                        <div>
+                                            <h5 class="fw-medium mb-3">Cambiar contraseña</h5>
+                                            <form class="mb-3">
+                                                <div class="mb-3">
+                                                    <label for="current-password" class="form-label">Contraseña
+                                                        actual</label>
+                                                    <input type="password" class="form-control" id="current-password">
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label for="new-password" class="form-label">Nueva
+                                                        contraseña</label>
+                                                    <input type="password" class="form-control" id="new-password">
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label for="confirm-password" class="form-label">Confirmar
+                                                        contraseña</label>
+                                                    <input type="password" class="form-control" id="confirm-password">
+                                                </div>
+                                                <button type="button" class="btn btn-primary w-100">Cambiar
+                                                    contraseña</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="card shadow-sm border-danger">
+                                    <div class="card-header bg-danger text-white">
+                                        <h5 class="card-title mb-0 d-flex align-items-center gap-2">
+                                            <i class="bi bi-exclamation-triangle"></i>
+                                            Zona de peligro
+                                        </h5>
+                                        <p class="card-text small mb-0">Acciones irreversibles para tu cuenta</p>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="alert alert-danger">
+                                            <h5 class="fw-medium mb-2">Eliminar cuenta</h5>
+                                            <p class="small mb-3">
+                                                Una vez elimines tu cuenta, todos tus datos serán borrados
+                                                permanentemente.
+                                                Esta acción no
+                                                se puede deshacer.
+                                            </p>
+                                            <button type="button" class="btn btn-danger">Eliminar mi cuenta</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                     </div>
                 </div>
             </div>
