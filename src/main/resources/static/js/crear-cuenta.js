@@ -16,16 +16,27 @@ document.addEventListener("DOMContentLoaded", function () {
         this.querySelector("i").classList.toggle("fa-eye-slash");
     });
 
-    // === FUNCION PARA CAMBIAR PASO ===
     function cambiarPaso(pasoActual, pasoSiguiente) {
-        // Oculta la sección actual y muestra la siguiente
-        document.getElementById(`step-${pasoActual}`).classList.remove('active');
-        document.getElementById(`step-${pasoSiguiente}`).classList.add('active');
+        const stepActual = document.getElementById(`step-${pasoActual}`);
+        const stepSiguiente = document.getElementById(`step-${pasoSiguiente}`);
+        const indicadorActual = document.getElementById(`step-indicator-${pasoActual}`);
+        const indicadorSiguiente = document.getElementById(`step-indicator-${pasoSiguiente}`);
 
-        // Actualiza los indicadores visuales
-        document.getElementById(`step-indicator-${pasoActual}`).classList.remove('active');
-        document.getElementById(`step-indicator-${pasoSiguiente}`).classList.add('active');
+        if (stepActual && stepSiguiente) {
+            stepActual.classList.remove('active');
+            stepSiguiente.classList.add('active');
+        } else {
+            console.error("No se encontró el contenedor de pasos:", pasoActual, pasoSiguiente);
+        }
+
+        if (indicadorActual && indicadorSiguiente) {
+            indicadorActual.classList.remove('active');
+            indicadorSiguiente.classList.add('active');
+        } else {
+            console.error("No se encontró el indicador de pasos:", pasoActual, pasoSiguiente);
+        }
     }
+
 
     // === Verificación dinámica de nombre de usuario ===
     const usernameInput = document.getElementById("nombreUsuario");

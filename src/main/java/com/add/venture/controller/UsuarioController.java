@@ -45,6 +45,6 @@ public class UsuarioController {
         // Si todo está bien, crear el usuario
         usuarioService.crearUsuario(dto);
         redirectAttributes.addFlashAttribute("mensaje", "Registro exitoso");
-        return "redirect:/usuarios/registro";
+        return "redirect:/";
     }
 }
