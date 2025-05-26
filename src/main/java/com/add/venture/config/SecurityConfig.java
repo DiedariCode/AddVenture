@@ -10,7 +10,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
-
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
@@ -28,9 +27,19 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                
+                .csrf(csrf -> csrf
+                        .ignoringRequestMatchers("/api/**")) // Ignorar CSRF para API
+
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/**", "/css/**", "/js/**", "/images/**", "/").permitAll()
+                        .requestMatchers(
+                                "/auth/**",
+                                "/api/**",
+                                "/css/**",
+                                "/js/**",
+                                "/usuarios/**",
+                                "/images/**",
+                                "/")
+                        .permitAll()
                         .anyRequest().authenticated())
                 .formLogin(form -> form
                         .loginPage("/auth/login") // tu login web personalizado
@@ -40,7 +49,7 @@ public class SecurityConfig {
                         .permitAll())
                 .logout(logout -> logout
                         .logoutUrl("/auth/logout")
-                        //.logoutSuccessUrl("/auth/login?logout=true")
+                        // .logoutSuccessUrl("/auth/login?logout=true")
                         .logoutSuccessUrl("/")
                         .permitAll());
 
