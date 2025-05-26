@@ -25,15 +25,15 @@ public class UsuarioAutenticadoHelper {
             String correo = authentication.getName();
             RegistroUsuarioDTO usuario = usuarioService.buscarPorEmail(correo);
 
-            System.out.println("Usuario autenticado: " + usuario); // Aquí imprimes el objeto
-            System.out.println("Correo autenticado: " + correo);
+            // System.out.println("Usuario autenticado: " + usuario); // Aquí imprimes el objeto
+            // System.out.println("Correo autenticado: " + correo);
 
             if (usuario != null) {
                 model.addAttribute("iniciales", usuario.getIniciales());
                 model.addAttribute("username", usuario);
 
-                System.out.println("Iniciales: " + usuario.getIniciales());
-                System.out.println("Nombre Usuario: " + usuario.getNombreUsuario()); // Asegúrate que exista este getter
+                // System.out.println("Iniciales: " + usuario.getIniciales());
+                // System.out.println("Nombre Usuario: " + usuario.getNombreUsuario()); // Asegúrate que exista este getter
                 model.addAttribute("iniciales", usuario.getIniciales());
                 model.addAttribute("username", usuario);
             }

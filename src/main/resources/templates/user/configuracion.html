@@ -17,7 +17,7 @@
 
 <body class="bg-light">
     <!-- Navigation -->
-    <header th:replace="fragments/navbar :: navbar"></header>
+    <header th:replace="~{fragments/navbar :: navbar}"></header>
 
     <main class="container py-4 py-md-5">
         <div class="mx-auto" style="max-width: 1000px;">
@@ -69,6 +69,14 @@
 
                 <!-- Main content -->
                 <div class="col-md-9">
+
+                    <!-- Mensaje de éxito -->
+                    <div th:if="${mensaje}" class="alert alert-success alert-dismissible fade show mt-3" role="alert">
+                        <i class="bi bi-check-circle me-2"></i>
+                        <span th:text="${mensaje}">Perfil actualizado correctamente</span>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+                    </div>
+
                     <div class="tab-content" id="configTabsContent">
                         <!-- Cuenta y perfil -->
                         <div class="tab-pane fade show active" id="cuenta" role="tabpanel" aria-labelledby="cuenta-tab">
@@ -194,12 +202,16 @@
                                         </div>
 
                                         <div class="mb-3">
+                                            <!-- Debug: pruebas
+                                            <p>Debug - Fecha: <span th:text="${usuario.fechaNacimiento}"></span></p>
+                                            <p>Debug - Usuario completo: <span th:text="${usuario}"></span></p> -->
+
                                             <label for="birthDate" class="form-label d-flex align-items-center gap-2">
                                                 <i class="bi bi-calendar"></i> Fecha de nacimiento
                                             </label>
                                             <div class="d-flex align-items-center gap-3">
                                                 <input type="date" class="form-control" id="birthDate"
-                                                    th:field="*{fechaNacimiento}">
+                                                    name="fechaNacimiento" th:value="${usuario.fechaNacimiento}">
                                                 <div
                                                     class="bg-primary-subtle px-3 py-2 rounded text-primary d-flex align-items-center gap-1">
                                                     <i class="bi bi-info-circle"></i>

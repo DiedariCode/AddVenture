@@ -31,6 +31,7 @@ public class PerfilController {
     public String mostrarVistaConfiguracion(Model model) {
         usuarioHelper.cargarDatosUsuarioParaNavbar(model);
         usuarioHelper.cargarUsuarioParaPerfil(model);
+        
 
         return "user/configuracion";
     }
