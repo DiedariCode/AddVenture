@@ -10,14 +10,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.add.venture.dto.RegistroUsuarioDTO;
-import com.add.venture.service.UsuarioService;
+import com.add.venture.service.IUsuarioService;
 
 @Controller
 @RequestMapping("/usuarios")
 public class UsuarioController {
 
     @Autowired
-    private UsuarioService usuarioService;
+    private IUsuarioService usuarioService;
 
     @GetMapping("/registro")
     public String mostrarFormularioRegistro(Model model) {

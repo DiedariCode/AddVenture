@@ -5,20 +5,26 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.add.venture.dto.PerfilUsuarioDTO;
 import com.add.venture.dto.RegistroUsuarioDTO;
 import com.add.venture.model.Usuario;
 import com.add.venture.repository.UsuarioRepository;
 
 @Service
-public class UsuarioServiceImpl implements UsuarioService {
+public class UsuarioServiceImpl implements IUsuarioService {
 
     @Autowired
     private UsuarioRepository usuarioRepository;
+
+    @Autowired
+    private UsuarioDetallesService usuarioDetallesService;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -91,4 +97,59 @@ public class UsuarioServiceImpl implements UsuarioService {
                 .orElse(null);
     }
 
+    @Override
+    public PerfilUsuarioDTO buscarPerfilPorEmail(String email) {
+        return usuarioRepository.findByEmail(email)
+                .map(usuario -> new PerfilUsuarioDTO(
+                        usuario.getNombre(),
+                        usuario.getApellidos(),
+                        usuario.getNombreUsuario(),
+                        usuario.getEmail(),
+                        usuario.getTelefono(),
+                        usuario.getPais(),
+                        usuario.getCiudad(),
+                        usuario.getFechaNacimiento(),
+                        usuario.getDescripcion())) // Biografía se puede agregar más adelante
+                .orElse(null);
+    }
+
+    @Override
+    public void actualizarPerfil(PerfilUsuarioDTO dto) {
+        // Obtener el usuario autenticado desde el contexto de seguridad
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String email = auth.getName(); // Esto es el email
+
+        Usuario usuario = usuarioRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+        usuario.setNombre(dto.getNombre());
+        usuario.setApellidos(dto.getApellido());
+
+        // Validar y actualizar username sólo si cambió y no existe otro igual
+        if (!usuario.getNombreUsuario().equals(dto.getUsername())) {
+            if (usuarioRepository.existsByNombreUsuario(dto.getUsername())) {
+                throw new RuntimeException("El nombre de usuario ya está en uso");
+            }
+            usuario.setNombreUsuario(dto.getUsername());
+        }
+
+        usuario.setTelefono(dto.getTelefono());
+        usuario.setPais(dto.getPais());
+        usuario.setCiudad(dto.getCiudad());
+        usuario.setFechaNacimiento(dto.getFechaNacimiento());
+        usuario.setDescripcion(dto.getBiografia());
+
+        usuarioRepository.save(usuario);
+
+        // Reautenticar con el email como username
+        UserDetails userDetails = usuarioDetallesService.loadUserByUsername(usuario.getEmail());
+        Authentication newAuth = new UsernamePasswordAuthenticationToken(
+                userDetails, userDetails.getPassword(), userDetails.getAuthorities());
+        SecurityContextHolder.getContext().setAuthentication(newAuth);
+    }
+
+    @Override
+    public boolean existeNombreUsuarioExceptoActual(String nombreUsuario, String emailActual) {
+        return usuarioRepository.existsByNombreUsuarioAndEmailNot(nombreUsuario, emailActual);
+    }
 }
