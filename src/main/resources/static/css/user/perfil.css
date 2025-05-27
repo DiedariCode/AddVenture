@@ -345,3 +345,35 @@ body {
         margin-bottom: 0.5rem;
     }
 }
+
+footer {
+    background-color: var(--primary);
+    color: white;
+    padding: 3rem 0;
+}
+
+.footer-link {
+    color: rgba(255, 255, 255, 0.8);
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.footer-link:hover {
+    color: white;
+    text-decoration: underline;
+}
+
+.social-icon {
+    width: 2rem;
+    height: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    border-radius: 9999px;
+    transition: background-color 0.2s ease;
+}
+
+.social-icon:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
