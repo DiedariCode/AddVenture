@@ -35,5 +35,5 @@ build/
 # Proyecto de Spring Boot
 # Ignorar archivos de configuración de Spring Boot
 /src/main/resources/application.properties
-/uploads/
+
 
