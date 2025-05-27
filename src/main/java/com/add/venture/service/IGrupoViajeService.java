@@ -57,4 +57,12 @@ public interface IGrupoViajeService {
             Boolean verificado,
             List<String> etiquetas,
             String ordenar);
+
+    /**
+     * Busca grupos de viaje por ID
+     * 
+     * @param id el ID del grupo a buscar
+     * @return el grupo encontrado o null si no existe
+     */
+    GrupoViaje buscarGrupoPorId(Integer id);
 }

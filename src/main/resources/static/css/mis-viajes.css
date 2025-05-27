@@ -1,0 +1,186 @@
+:root {
+    --primary: #3b82f6;
+    --primary-dark: #2563eb;
+    --primary-light: #dbeafe;
+    --primary-border: #bfdbfe;
+}
+
+/* Custom colors */
+body {
+    background-color: #f6f4fd;
+}
+
+/* Navbar styles */
+.avatar-circle {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: 600;
+    border: 2px solid white;
+}
+
+.avatar-group {
+    display: flex;
+}
+
+.avatar-group .avatar-circle {
+    margin-left: -8px;
+}
+
+.avatar-group .avatar-circle:first-child {
+    margin-left: 0;
+}
+
+.back-link {
+    display: inline-flex;
+    align-items: center;
+    color: var(--primary);
+    text-decoration: none;
+    margin-bottom: 1.5rem;
+    font-weight: 500;
+}
+
+.dropdown-toggle::after {
+    color: white !important;
+}
+
+.navbar {
+    background-color: var(--primary);
+}
+
+.navbar-brand {
+    font-weight: 700;
+}
+
+/* End Navbar styles */
+.bg-primary-subtle {
+    background-color: rgba(13, 110, 253, 0.1);
+}
+
+.bg-success-subtle {
+    background-color: rgba(25, 135, 84, 0.1);
+}
+
+.bg-warning-subtle {
+    background-color: rgba(255, 193, 7, 0.1);
+}
+
+.bg-purple-subtle {
+    background-color: rgba(111, 66, 193, 0.1);
+}
+
+.bg-teal-subtle {
+    background-color: rgba(32, 201, 151, 0.1);
+}
+
+.bg-blue-subtle {
+    background-color: rgba(13, 110, 253, 0.1);
+}
+
+.text-purple {
+    color: #6f42c1;
+}
+
+.text-teal {
+    color: #20c997;
+}
+
+.text-blue {
+    color: #0d6efd;
+}
+
+.text-white-75 {
+    color: rgba(255, 255, 255, 0.75);
+}
+
+/* Gradient backgrounds */
+.bg-gradient-to-r {
+    background: linear-gradient(to right, var(--bs-primary), #4d94ff);
+}
+
+.from-primary {
+    --tw-gradient-from: var(--bs-primary);
+}
+
+.to-primary-light {
+    --tw-gradient-to: #4d94ff;
+}
+
+.opacity-80 {
+    opacity: 0.8;
+}
+
+
+.ms-n2 {
+    margin-left: -0.5rem;
+}
+
+/* Card hover effect */
+.hover-shadow {
+    transition: all 0.3s ease;
+}
+
+.hover-shadow:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+}
+
+/* Max width utilities */
+.max-w-2xl {
+    max-width: 42rem;
+}
+
+/* Object fit */
+.object-cover {
+    object-fit: cover;
+}
+
+/* Inset utility */
+.inset-0 {
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+}
+
+/* Button close small */
+.btn-close-sm {
+    padding: 0.25rem;
+    font-size: 0.75rem;
+}
+
+/* Rounded utilities */
+.rounded-4 {
+    border-radius: 0.5rem;
+}
+
+/* Custom spacing */
+.gap-2 {
+    gap: 0.5rem;
+}
+
+/* Custom font weights */
+.fw-medium {
+    font-weight: 500;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    h1 {
+        font-size: 1.75rem;
+    }
+
+    .card-title {
+        font-size: 1.25rem;
+    }
+
+    .avatar-circle {
+        width: 32px;
+        height: 32px;
+        font-size: 0.75rem;
+    }
+}

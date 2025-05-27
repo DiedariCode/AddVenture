@@ -36,21 +36,21 @@ public class GrupoViajeServiceImpl implements IGrupoViajeService {
 
     @Autowired
     private GrupoViajeRepository grupoViajeRepository;
-    
+
     @Autowired
     private ViajeRepository viajeRepository;
-    
+
     @Autowired
     private UsuarioRepository usuarioRepository;
-    
+
     @Autowired
     private TipoViajeRepository tipoViajeRepository;
-    
+
     @Autowired
     private EtiquetaRepository etiquetaRepository;
-    
+
     private ObjectMapper objectMapper = new ObjectMapper();
-    
+
     @Override
     @Transactional
     public GrupoViaje crearGrupoViaje(CrearGrupoViajeDTO dto) {
@@ -59,7 +59,7 @@ public class GrupoViajeServiceImpl implements IGrupoViajeService {
         String email = auth.getName();
         Usuario creador = usuarioRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
-        
+
         // Crear el viaje
         Viaje viaje = new Viaje();
         viaje.setDestinoPrincipal(dto.getDestinoPrincipal());
@@ -73,17 +73,17 @@ public class GrupoViajeServiceImpl implements IGrupoViajeService {
         viaje.setFechaCreacion(LocalDateTime.now());
         viaje.setEsVerificado(false);
         viaje.setEstado("activo");
-        
+
         // Asignar tipo de viaje si se especificó
         if (dto.getIdTipoViaje() != null) {
             TipoViaje tipoViaje = tipoViajeRepository.findById(dto.getIdTipoViaje())
                     .orElseThrow(() -> new RuntimeException("Tipo de viaje no encontrado"));
             viaje.setTipo(tipoViaje);
         }
-        
+
         // Guardar el viaje
         viaje = viajeRepository.save(viaje);
-        
+
         // Crear el grupo de viaje
         GrupoViaje grupo = new GrupoViaje();
         grupo.setNombreViaje(dto.getNombreViaje());
@@ -92,14 +92,14 @@ public class GrupoViajeServiceImpl implements IGrupoViajeService {
         grupo.setEstado("activo");
         grupo.setCreador(creador);
         grupo.setViaje(viaje);
-        
+
         // Guardar el grupo sin establecer la relación bidireccional
         grupo = grupoViajeRepository.save(grupo);
-        
+
         // Establecer la relación bidireccional manualmente después de guardar
         // pero no volver a guardar el viaje para evitar la recursión
         viaje.setGrupo(grupo);
-        
+
         // Procesar etiquetas si se especificaron
         if (dto.getEtiquetas() != null && !dto.getEtiquetas().isEmpty()) {
             Set<Etiqueta> etiquetas = new HashSet<>();
@@ -114,7 +114,7 @@ public class GrupoViajeServiceImpl implements IGrupoViajeService {
             }
             grupo.setEtiquetas(etiquetas);
         }
-        
+
         // Añadir al creador como participante
         ParticipanteGrupo participante = new ParticipanteGrupo();
         participante.setUsuario(creador);
@@ -122,7 +122,7 @@ public class GrupoViajeServiceImpl implements IGrupoViajeService {
         participante.setRolParticipante("CREADOR");
         participante.setEstadoSolicitud(EstadoSolicitud.ACEPTADO);
         participante.setFechaUnion(LocalDateTime.now());
-        
+
         // Inicializar conjuntos si son nulos
         if (grupo.getParticipantes() == null) {
             grupo.setParticipantes(new HashSet<>());
@@ -132,15 +132,15 @@ public class GrupoViajeServiceImpl implements IGrupoViajeService {
         if (dto.getDiasItinerarioJson() != null && !dto.getDiasItinerarioJson().isEmpty()) {
             try {
                 List<DiaItinerarioDTO> diasItinerario = objectMapper.readValue(
-                    dto.getDiasItinerarioJson(), 
-                    new TypeReference<List<DiaItinerarioDTO>>() {}
-                );
+                        dto.getDiasItinerarioJson(),
+                        new TypeReference<List<DiaItinerarioDTO>>() {
+                        });
                 dto.setDiasItinerario(diasItinerario);
             } catch (JsonProcessingException e) {
                 throw new RuntimeException("Error al procesar el itinerario: " + e.getMessage());
             }
         }
-        
+
         // Procesar itinerario si se especificó
         if (dto.getDiasItinerario() != null && !dto.getDiasItinerario().isEmpty()) {
             Set<Itinerario> itinerarios = new HashSet<>();
@@ -157,7 +157,7 @@ public class GrupoViajeServiceImpl implements IGrupoViajeService {
             }
             grupo.setItinerarios(itinerarios);
         }
-        
+
         // Guardar el grupo final sin volver a establecer la relación con el viaje
         return grupoViajeRepository.save(grupo);
     }
@@ -174,21 +174,27 @@ public class GrupoViajeServiceImpl implements IGrupoViajeService {
 
     @Override
     public List<GrupoViaje> buscarGrupos(
-        String destino,
-        LocalDate fechaInicio,
-        LocalDate fechaFin,
-        Long idTipoViaje,
-        String tipoGrupo,
-        String rangoEdad,
-        Boolean verificado,
-        List<String> etiquetas,
-        String ordenar) {
-    
+            String destino,
+            LocalDate fechaInicio,
+            LocalDate fechaFin,
+            Long idTipoViaje,
+            String tipoGrupo,
+            String rangoEdad,
+            Boolean verificado,
+            List<String> etiquetas,
+            String ordenar) {
+
         // En una implementación real, aquí se realizaría una consulta con filtros
         // Por ahora, simplemente devolvemos todos los grupos
         return grupoViajeRepository.findAll();
-        
+
         // Para una implementación más completa, se podría usar Specification o QueryDSL
         // para construir consultas dinámicas basadas en los filtros proporcionados
-}
+    }
+
+    @Override
+    public GrupoViaje buscarGrupoPorId(Integer id) {
+        return grupoViajeRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Grupo de viaje no encontrado"));
+    }
 }
