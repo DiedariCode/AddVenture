@@ -1,55 +1,29 @@
 package com.add.venture.dto;
 
-import java.time.LocalDate;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class DiaItinerarioDTO {
-    private int numeroDia;
-    private LocalDate fecha;
+    
+    @NotNull(message = "El número de día es obligatorio")
+    private Integer diaNumero;
+    
+    @NotBlank(message = "El título es obligatorio")
     private String titulo;
+    
     private String descripcion;
 
-    public DiaItinerarioDTO(int numeroDia, LocalDate fecha, String titulo, String descripcion) {
-        this.numeroDia = numeroDia;
-        this.fecha = fecha;
-        this.titulo = titulo;
-        this.descripcion = descripcion;
-    }
-
-    public DiaItinerarioDTO() {
-    }
-
-    // Getters y Setters
-    public int getNumeroDia() {
-        return numeroDia;
-    }
-
-    public void setNumeroDia(int numeroDia) {
-        this.numeroDia = numeroDia;
-    }
-
-    public LocalDate getFecha() {
-        return fecha;
-    }
-
-    public void setFecha(LocalDate fecha) {
-        this.fecha = fecha;
-    }
-
-    public String getTitulo() {
-        return titulo;
-    }
-
-    public void setTitulo(String titulo) {
-        this.titulo = titulo;
-    }
-
-    public String getDescripcion() {
-        return descripcion;
-    }
-
-    public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
-    }
-
+    private String puntoPartida;
+    
+    private String puntoLlegada;
+    
+    private String duracionEstimada;
 }

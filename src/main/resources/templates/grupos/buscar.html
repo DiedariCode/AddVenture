@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="fragments/head :: head(title='Buscar Grupos de Viaje')">
+</head>
+
+<body>
+    <header th:replace="fragments/navbar :: navbar"></header>
+
+    <main class="container my-5">
+        <div class="row mb-4">
+            <div class="col-md-8">
+                <h1>Grupos de Viaje</h1>
+            </div>
+            <div class="col-md-4 text-end">
+                <a th:href="@{/crear-grupo}" class="btn btn-primary">
+                    <i class="bi bi-plus-circle me-2"></i>Crear Nuevo Grupo
+                </a>
+            </div>
+        </div>
+
+        <!-- Mensaje de éxito -->
+        <div th:if="${mensaje}" class="alert alert-success alert-dismissible fade show" role="alert">
+            <span th:text="${mensaje}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+
+        <!-- Filtros de búsqueda -->
+        <div class="card mb-4">
+            <div class="card-body">
+                <form th:action="@{/grupos}" method="get" class="row g-3">
+                    <div class="col-md-4">
+                        <label for="destino" class="form-label">Destino</label>
+                        <input type="text" class="form-control" id="destino" name="destino">
+                    </div>
+                    <div class="col-md-3">
+                        <label for="fechaInicio" class="form-label">Fecha Inicio</label>
+                        <input type="date" class="form-control" id="fechaInicio" name="fechaInicio">
+                    </div>
+                    <div class="col-md-3">
+                        <label for="tipoGrupo" class="form-label">Tipo de Grupo</label>
+                        <select class="form-select" id="tipoGrupo" name="tipoGrupo">
+                            <option value="">Todos</option>
+                            <option value="Público">Público</option>
+                            <option value="Privado">Privado</option>
+                            <option value="Solo Invitación">Solo Invitación</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2 d-flex align-items-end">
+                        <button type="submit" class="btn btn-primary w-100">Buscar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Lista de grupos -->
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            <div th:each="grupo : ${grupos}" class="col">
+                <div class="card h-100">
+                    <img th:if="${grupo.viaje != null && grupo.viaje.imagenDestacada != null}" 
+                         th:src="${grupo.viaje.imagenDestacada}" 
+                         class="card-img-top" alt="Imagen del viaje"
+                         style="height: 200px; object-fit: cover;">
+                    <img th:unless="${grupo.viaje != null && grupo.viaje.imagenDestacada != null}"
+                         src="https://via.placeholder.com/300x200?text=Sin+Imagen" 
+                         class="card-img-top" alt="Sin imagen"
+                         style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title" th:text="${grupo.nombreViaje}">Nombre del Viaje</h5>
+                        <p class="card-text" th:if="${grupo.viaje != null}" th:text="${grupo.viaje.destinoPrincipal}">Destino</p>
+                        <p class="card-text">
+                            <span class="badge bg-primary" th:text="${grupo.tipoGrupo}">Tipo de Grupo</span>
+                            <span th:if="${grupo.viaje != null && grupo.viaje.tipo != null}" 
+                                  class="badge bg-secondary" 
+                                  th:text="${grupo.viaje.tipo.nombreTipo}">Tipo de Viaje</span>
+                        </p>
+                        <p class="card-text" th:if="${grupo.viaje != null}">
+                            <small class="text-muted">
+                                <i class="bi bi-calendar-event me-1"></i>
+                                <span th:text="${#temporals.format(grupo.viaje.fechaInicio, 'dd/MM/yyyy')}">Fecha Inicio</span>
+                                -
+                                <span th:text="${#temporals.format(grupo.viaje.fechaFin, 'dd/MM/yyyy')}">Fecha Fin</span>
+                            </small>
+                        </p>
+                    </div>
+                    <div class="card-footer">
+                        <div class="d-grid">
+                            <a th:href="@{/grupos/{id}(id=${grupo.idGrupo})}" class="btn btn-outline-primary">Ver Detalles</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mensaje si no hay grupos -->
+        <div th:if="${#lists.isEmpty(grupos)}" class="alert alert-info text-center my-5">
+            <i class="bi bi-info-circle-fill me-2"></i>
+            No se encontraron grupos de viaje. ¡Crea uno nuevo!
+        </div>
+    </main>
+
+    <footer th:replace="fragments/footer :: footer"></footer>
+</body>
+
+</html>

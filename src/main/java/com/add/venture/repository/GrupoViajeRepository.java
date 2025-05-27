@@ -1,0 +1,36 @@
+package com.add.venture.repository;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+
+import com.add.venture.model.GrupoViaje;
+import com.add.venture.model.Viaje;
+
+public interface GrupoViajeRepository extends JpaRepository<GrupoViaje, Integer> {
+    
+    /**
+     * Verifica si un viaje ya está asignado a algún grupo
+     * 
+     * @param idViaje el ID del viaje a verificar
+     * @return true si el viaje ya está asignado a un grupo, false en caso contrario
+     */
+    boolean existsByViajeIdViaje(Long idViaje);
+    
+    /**
+     * Busca un grupo por su viaje asociado
+     * 
+     * @param viaje el viaje asociado al grupo
+     * @return el grupo asociado al viaje, o null si no existe
+     */
+    GrupoViaje findByViaje(Viaje viaje);
+    
+    /**
+     * Cuenta cuántos grupos ha creado un usuario
+     * 
+     * @param idUsuario el ID del usuario creador
+     * @return el número de grupos creados por el usuario
+     */
+    @Query("SELECT COUNT(g) FROM GrupoViaje g WHERE g.creador.idUsuario = :idUsuario")
+    long countByCreadorId(@Param("idUsuario") Long idUsuario);
+}

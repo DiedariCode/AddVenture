@@ -10,6 +10,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UsuarioLogroId implements Serializable {
-    private Integer usuario;
-    private Integer logro;
+    private static final long serialVersionUID = 1L;
+    
+    private Long usuario; // Cambiado a Long para coincidir con el tipo de Usuario.idUsuario
+    private Long logro; // Cambiado a Long para coincidir con el tipo de Logro.idLogro
 }

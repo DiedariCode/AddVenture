@@ -10,6 +10,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ParticipanteGrupoId implements Serializable {
-    private Integer usuario;
-    private Integer grupo;
+    private static final long serialVersionUID = 1L;
+    
+    private Long usuario; // Cambiado a Long para coincidir con el tipo de Usuario.idUsuario
+    private Integer grupo; // Mantiene Integer para coincidir con GrupoViaje.idGrupo
 }
