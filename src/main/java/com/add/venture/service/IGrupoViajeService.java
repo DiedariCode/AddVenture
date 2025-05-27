@@ -1,5 +1,6 @@
 package com.add.venture.service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import com.add.venture.dto.CrearGrupoViajeDTO;
@@ -31,4 +32,29 @@ public interface IGrupoViajeService {
      * @return lista de tipos de viaje
      */
     List<TipoViaje> obtenerTiposViaje();
+    
+    /**
+     * Busca grupos de viaje según los filtros especificados
+     * 
+     * @param destino destino principal del viaje
+     * @param fechaInicio fecha de inicio del viaje
+     * @param fechaFin fecha de fin del viaje
+     * @param idTipoViaje ID del tipo de viaje
+     * @param tipoGrupo tipo de grupo (Mixto, Solo Mujeres, Solo Hombres)
+     * @param rangoEdad rango de edad de los participantes
+     * @param verificado si el grupo está verificado
+     * @param etiquetas lista de etiquetas separadas por comas
+     * @param ordenar criterio de ordenación
+     * @return lista de grupos que cumplen con los filtros
+     */
+    List<GrupoViaje> buscarGrupos(
+            String destino,
+            LocalDate fechaInicio,
+            LocalDate fechaFin,
+            Long idTipoViaje,
+            String tipoGrupo,
+            String rangoEdad,
+            Boolean verificado,
+            List<String> etiquetas,
+            String ordenar);
 }

@@ -1,0 +1,239 @@
+:root {
+    --primary: #3b82f6;
+    --primary-dark: #2563eb;
+    --primary-light: #60a5fa;
+    --primary-soft: #dbeafe;
+    --blue: #2563eb;
+    --blue-soft: #dbeafe;
+    --green: #16a34a;
+    --green-soft: #dcfce7;
+    --amber: #d97706;
+    --amber-soft: #fef3c7;
+    --purple: #9333ea;
+    --purple-soft: #f3e8ff;
+    --emerald: #059669;
+    --emerald-soft: #d1fae5;
+}
+
+body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    color: #333;
+}
+
+.navbar {
+    background-color: var(--primary);
+}
+
+.navbar-brand {
+    font-weight: 700;
+}
+
+.dropdown-toggle::after {
+    color: white !important;
+}
+
+/* Overlay gradient for hero section */
+.overlay-gradient {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, rgba(30, 64, 175, 0.8), rgba(59, 130, 246, 0.7));
+    z-index: 1;
+}
+
+.card-img-overlay {
+    z-index: 2;
+}
+
+.card img {
+    width: 100%;
+    height: 230px;
+    object-fit: cover;
+    object-position: center;
+}
+
+.avatar-circle {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: 600;
+    border: 2px solid white;
+    position: relative;
+    /* para posicionar la img absoluta dentro */
+    overflow: hidden;
+    /* recorta la imagen para que no se salga del círculo */
+}
+
+.avatar-circle img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+    position: absolute;
+    /* opcional, puedes probar sin esto */
+    top: 0;
+    left: 0;
+}
+
+.avatar-group {
+    display: flex;
+}
+
+.avatar-group .avatar-circle {
+    margin-left: -8px;
+}
+
+.avatar-group .avatar-circle:first-child {
+    margin-left: 0;
+}
+
+/* Custom badge colors */
+.bg-blue-soft {
+    background-color: var(--blue-soft);
+}
+
+.text-blue {
+    color: var(--blue);
+}
+
+.bg-green-soft {
+    background-color: var(--green-soft);
+}
+
+.text-green {
+    color: var(--green);
+}
+
+.bg-amber-soft {
+    background-color: var(--amber-soft);
+}
+
+.text-amber {
+    color: var(--amber);
+}
+
+.bg-purple-soft {
+    background-color: var(--purple-soft);
+}
+
+.text-purple {
+    color: var(--purple);
+}
+
+.bg-emerald-soft {
+    background-color: var(--emerald-soft);
+}
+
+.text-emerald {
+    color: var(--emerald);
+}
+
+.bg-primary-soft {
+    background-color: var(--primary-soft);
+}
+
+/* Card hover effect */
+.hover-shadow {
+    transition: all 0.3s ease;
+}
+
+.hover-shadow:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1) !important;
+}
+
+.img-cover {
+    width: 100%;
+    object-fit: cover;
+}
+
+/* Custom button styles */
+.btn-primary {
+    background-color: var(--primary);
+    border-color: var(--primary);
+}
+
+.btn-primary:hover,
+.btn-primary:focus {
+    background-color: var(--primary-dark);
+    border-color: var(--primary-dark);
+}
+
+/* Custom form control focus */
+.form-control:focus,
+.form-select:focus {
+    border-color: var(--primary-light);
+    box-shadow: 0 0 0 0.25rem rgba(59, 130, 246, 0.25);
+}
+
+/* Custom tab styling */
+.nav-tabs .nav-link {
+    color: #6c757d;
+    border: none;
+    padding: 0.75rem 1rem;
+    font-weight: 500;
+    border-bottom: 2px solid transparent;
+}
+
+.nav-tabs .nav-link.active {
+    color: var(--primary);
+    background-color: transparent;
+    border-bottom: 2px solid var(--primary);
+}
+
+.nav-tabs .nav-link:hover:not(.active) {
+    border-bottom: 2px solid #e9ecef;
+}
+
+/* Tag styles */
+.tag {
+    display: inline-flex;
+    align-items: center;
+    background-color: var(--primary-soft);
+    color: var(--primary);
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    margin-right: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.tag .close {
+    margin-left: 0.5rem;
+    font-size: 0.875rem;
+    cursor: pointer;
+}
+
+/* Pagination custom styling */
+.page-link {
+    color: var(--primary);
+    border-radius: 0.25rem;
+    margin: 0 0.125rem;
+}
+
+.page-item.active .page-link {
+    background-color: var(--primary);
+    border-color: var(--primary);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .card-img-overlay {
+        padding: 1.5rem;
+    }
+
+    .card-img-overlay h1 {
+        font-size: 1.75rem;
+    }
+
+    .card-img-overlay p {
+        font-size: 1rem;
+    }
+}

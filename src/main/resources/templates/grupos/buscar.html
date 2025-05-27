@@ -2,104 +2,456 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head th:replace="fragments/head :: head(title='Buscar Grupos de Viaje')">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buscar Grupos de Viaje | AddVenture</title>
+    <!-- BLOQUE DE LINKS FRAGMENTS -->
+    <th:block th:replace="~{fragments/head :: head-links}"></th:block>
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" th:href="@{/css/buscar-grupos.css}">
 </head>
 
 <body>
     <header th:replace="fragments/navbar :: navbar"></header>
 
-    <main class="container my-5">
-        <div class="row mb-4">
-            <div class="col-md-8">
-                <h1>Grupos de Viaje</h1>
-            </div>
-            <div class="col-md-4 text-end">
-                <a th:href="@{/crear-grupo}" class="btn btn-primary">
-                    <i class="bi bi-plus-circle me-2"></i>Crear Nuevo Grupo
-                </a>
-            </div>
-        </div>
+    <main class="bg-light py-4 py-md-5">
+        <div class="container">
+            <!-- Hero para crear nuevo grupo -->
+            <div class="card mb-4 border-0 rounded-4 overflow-hidden shadow-lg">
+                <div class="position-relative">
+                    <div class="overlay-gradient"></div>
+                    <img th:src="@{/images/aventurero.jpg}" alt="Grupo de viajeros"
+                        class="img-cover card-img w-100 object-cover" style="height: 300px;">
 
-        <!-- Mensaje de éxito -->
-        <div th:if="${mensaje}" class="alert alert-success alert-dismissible fade show" role="alert">
-            <span th:text="${mensaje}"></span>
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-
-        <!-- Filtros de búsqueda -->
-        <div class="card mb-4">
-            <div class="card-body">
-                <form th:action="@{/grupos}" method="get" class="row g-3">
-                    <div class="col-md-4">
-                        <label for="destino" class="form-label">Destino</label>
-                        <input type="text" class="form-control" id="destino" name="destino">
-                    </div>
-                    <div class="col-md-3">
-                        <label for="fechaInicio" class="form-label">Fecha Inicio</label>
-                        <input type="date" class="form-control" id="fechaInicio" name="fechaInicio">
-                    </div>
-                    <div class="col-md-3">
-                        <label for="tipoGrupo" class="form-label">Tipo de Grupo</label>
-                        <select class="form-select" id="tipoGrupo" name="tipoGrupo">
-                            <option value="">Todos</option>
-                            <option value="Público">Público</option>
-                            <option value="Privado">Privado</option>
-                            <option value="Solo Invitación">Solo Invitación</option>
-                        </select>
-                    </div>
-                    <div class="col-md-2 d-flex align-items-end">
-                        <button type="submit" class="btn btn-primary w-100">Buscar</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-
-        <!-- Lista de grupos -->
-        <div class="row row-cols-1 row-cols-md-3 g-4">
-            <div th:each="grupo : ${grupos}" class="col">
-                <div class="card h-100">
-                    <img th:if="${grupo.viaje != null && grupo.viaje.imagenDestacada != null}" 
-                         th:src="${grupo.viaje.imagenDestacada}" 
-                         class="card-img-top" alt="Imagen del viaje"
-                         style="height: 200px; object-fit: cover;">
-                    <img th:unless="${grupo.viaje != null && grupo.viaje.imagenDestacada != null}"
-                         src="https://via.placeholder.com/300x200?text=Sin+Imagen" 
-                         class="card-img-top" alt="Sin imagen"
-                         style="height: 200px; object-fit: cover;">
-                    <div class="card-body">
-                        <h5 class="card-title" th:text="${grupo.nombreViaje}">Nombre del Viaje</h5>
-                        <p class="card-text" th:if="${grupo.viaje != null}" th:text="${grupo.viaje.destinoPrincipal}">Destino</p>
-                        <p class="card-text">
-                            <span class="badge bg-primary" th:text="${grupo.tipoGrupo}">Tipo de Grupo</span>
-                            <span th:if="${grupo.viaje != null && grupo.viaje.tipo != null}" 
-                                  class="badge bg-secondary" 
-                                  th:text="${grupo.viaje.tipo.nombreTipo}">Tipo de Viaje</span>
-                        </p>
-                        <p class="card-text" th:if="${grupo.viaje != null}">
-                            <small class="text-muted">
-                                <i class="bi bi-calendar-event me-1"></i>
-                                <span th:text="${#temporals.format(grupo.viaje.fechaInicio, 'dd/MM/yyyy')}">Fecha Inicio</span>
-                                -
-                                <span th:text="${#temporals.format(grupo.viaje.fechaFin, 'dd/MM/yyyy')}">Fecha Fin</span>
-                            </small>
-                        </p>
-                    </div>
-                    <div class="card-footer">
-                        <div class="d-grid">
-                            <a th:href="@{/grupos/{id}(id=${grupo.idGrupo})}" class="btn btn-outline-primary">Ver Detalles</a>
+                    <div class="card-img-overlay d-flex flex-column justify-content-center text-white p-4 p-md-5">
+                        <h1 class="display-5 fw-bold mb-3">¿No encuentras el grupo perfecto para ti?</h1>
+                        <p class="lead mb-4 text-light">Crea tu propio grupo de viaje, define el destino, las fechas y
+                            encuentra compañeros con tus mismos intereses.</p>
+                        <div>
+                            <a th:href="@{/crear-grupo}" class="btn btn-light btn-lg text-primary">
+                                <i class="bi bi-plus-circle me-2"></i>Crear nuevo grupo
+                            </a>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <!-- Mensaje si no hay grupos -->
-        <div th:if="${#lists.isEmpty(grupos)}" class="alert alert-info text-center my-5">
-            <i class="bi bi-info-circle-fill me-2"></i>
-            No se encontraron grupos de viaje. ¡Crea uno nuevo!
+            <!-- Mensaje de éxito -->
+            <div th:if="${mensaje}" class="alert alert-success alert-dismissible fade show" role="alert">
+                <span th:text="${mensaje}"></span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+
+            <h2 class="fw-bold mb-4">Buscar Grupos de Viaje</h2>
+
+            <!-- Filtros unificados -->
+            <div class="card mb-4 border-light shadow-sm">
+                <div class="card-body p-4">
+                    <ul class="nav nav-tabs mb-4" id="searchTabs" role="tablist">
+                        <li class="nav-item flex-fill text-center" role="presentation">
+                            <button class="nav-link active w-100" id="quick-search-tab" data-bs-toggle="tab"
+                                data-bs-target="#quick-search" type="button" role="tab">Búsqueda rápida</button>
+                        </li>
+                        <li class="nav-item flex-fill text-center" role="presentation">
+                            <button class="nav-link w-100" id="advanced-filters-tab" data-bs-toggle="tab"
+                                data-bs-target="#advanced-filters" type="button" role="tab">Filtros avanzados</button>
+                        </li>
+                    </ul>
+
+                    <div class="tab-content" id="searchTabsContent">
+                        <!-- Búsqueda rápida -->
+                        <div class="tab-pane fade show active" id="quick-search" role="tabpanel">
+                            <form th:action="@{/grupos}" method="get">
+                                <div class="row g-3 mb-4">
+                                    <div class="col-md-3">
+                                        <label for="destino" class="form-label">¿A dónde quieres ir?</label>
+                                        <input type="text" class="form-control form-control-lg" id="destino"
+                                            name="destino" placeholder="Ej: Cusco, Perú">
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label for="fechaInicio" class="form-label">Fecha de inicio</label>
+                                        <input type="date" class="form-control form-control-lg" id="fechaInicio"
+                                            name="fechaInicio">
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label for="fechaFin" class="form-label">Fecha de fin</label>
+                                        <input type="date" class="form-control form-control-lg" id="fechaFin"
+                                            name="fechaFin">
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label for="tipoViaje" class="form-label">Tipo de viaje</label>
+                                        <select class="form-select form-select-lg" id="tipoViaje" name="tipoViaje">
+                                            <option selected value="">Selecciona</option>
+                                            <option th:each="tipo : ${tiposViaje}" th:value="${tipo.idTipo}"
+                                                th:text="${tipo.nombreTipo}"></option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="text-center">
+                                    <button type="submit" class="btn btn-primary btn-lg px-5">
+                                        <i class="bi bi-search me-2"></i>Buscar Grupos
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+
+                        <!-- Filtros avanzados -->
+                        <div class="tab-pane fade" id="advanced-filters" role="tabpanel">
+                            <form th:action="@{/grupos}" method="get">
+                                <div class="row g-4">
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label class="form-label d-flex align-items-center">
+                                                <i class="bi bi-geo-alt me-2"></i>Destino
+                                            </label>
+                                            <input type="text" class="form-control" name="destino"
+                                                placeholder="Ej: Cusco, Perú">
+                                        </div>
+
+                                        <div class="row mb-3">
+                                            <div class="col-md-6">
+                                                <label class="form-label d-flex align-items-center">
+                                                    <i class="bi bi-calendar me-2"></i>Fecha inicio
+                                                </label>
+                                                <input type="date" class="form-control" name="fechaInicio">
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label class="form-label d-flex align-items-center">
+                                                    <i class="bi bi-calendar me-2"></i>Fecha fin
+                                                </label>
+                                                <input type="date" class="form-control" name="fechaFin">
+                                            </div>
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label class="form-label d-flex align-items-center">
+                                                <i class="bi bi-clock me-2"></i>Duración del viaje
+                                            </label>
+                                            <select class="form-select" name="duracion">
+                                                <option selected value="">Cualquier duración</option>
+                                                <option value="weekend">Fin de semana (1-3 días)</option>
+                                                <option value="short">Viaje corto (4-7 días)</option>
+                                                <option value="medium">Viaje medio (8-14 días)</option>
+                                                <option value="long">Viaje largo (15+ días)</option>
+                                            </select>
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label class="form-label d-flex align-items-center">
+                                                <i class="bi bi-tag me-2"></i>Tipo de viaje
+                                            </label>
+                                            <select class="form-select" name="tipoViaje">
+                                                <option selected value="">Selecciona un tipo...</option>
+                                                <option th:each="tipo : ${tiposViaje}" th:value="${tipo.idTipo}"
+                                                    th:text="${tipo.nombreTipo}"></option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label class="form-label">Género del grupo</label>
+                                            <div class="form-check mb-2">
+                                                <input class="form-check-input" type="radio" name="tipoGrupo" id="mixto"
+                                                    value="Mixto" checked>
+                                                <label class="form-check-label" for="mixto">Mixto</label>
+                                            </div>
+                                            <div class="form-check mb-2">
+                                                <input class="form-check-input" type="radio" name="tipoGrupo"
+                                                    id="solo-mujeres" value="Solo Mujeres">
+                                                <label class="form-check-label" for="solo-mujeres">Solo mujeres</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="tipoGrupo"
+                                                    id="solo-hombres" value="Solo Hombres">
+                                                <label class="form-check-label" for="solo-hombres">Solo hombres</label>
+                                            </div>
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label class="form-label">Rango de edad</label>
+                                            <select class="form-select" name="rangoEdad">
+                                                <option selected value="">Cualquier edad</option>
+                                                <option value="18-25">18-25 años</option>
+                                                <option value="26-35">26-35 años</option>
+                                                <option value="36-45">36-45 años</option>
+                                                <option value="46-60">46-60 años</option>
+                                                <option value="60+">60+ años</option>
+                                            </select>
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label class="form-label">Características</label>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" id="verificado"
+                                                    name="verificado" value="true">
+                                                <label class="form-check-label d-flex align-items-center"
+                                                    for="verificado">
+                                                    Grupos verificados <i
+                                                        class="bi bi-check-circle-fill text-success ms-1"></i>
+                                                </label>
+                                            </div>
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label class="form-label d-flex align-items-center">
+                                                <i class="bi bi-tag me-2"></i>Etiquetas
+                                            </label>
+                                            <div id="tagContainer" class="d-flex flex-wrap gap-2 mb-2">
+                                                <!-- Tags will be added here dynamically -->
+                                            </div>
+                                            <div class="input-group">
+                                                <input type="text" class="form-control" id="tagInput"
+                                                    placeholder="Añadir etiqueta...">
+                                                <button class="btn btn-outline-primary" type="button"
+                                                    id="addTagBtn">Añadir</button>
+                                                <input type="hidden" name="etiquetas" id="etiquetasHidden">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="text-center mt-4">
+                                    <button type="submit" class="btn btn-primary btn-lg px-5">
+                                        <i class="bi bi-funnel me-2"></i>Aplicar filtros
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Resultados de búsqueda -->
+            <div class="mb-4">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <div>
+                        <h3 class="fw-semibold mb-1">Resultados de búsqueda</h3>
+                        <p class="text-muted" th:if="${grupos != null}">
+                            Se encontraron <span th:text="${grupos.size()}">0</span> grupos que coinciden con tu
+                            búsqueda
+                        </p>
+                    </div>
+                    <div>
+                        <select class="form-select" name="ordenar">
+                            <option selected value="fecha">Ordenar por</option>
+                            <option value="fecha">Fecha (más cercana)</option>
+                            <option value="recientes">Más recientes</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row g-4">
+                    <!-- Grupos de viaje -->
+                    <div th:each="grupo : ${grupos}" class="col-md-6 col-lg-4">
+                        <div class="card h-100 border-light hover-shadow">
+                            <div class="position-relative">
+                                <img th:if="${grupo.viaje != null && grupo.viaje.imagenDestacada != null}"
+                                    th:src="${grupo.viaje.imagenDestacada}" class="card-img-top" alt="Imagen del viaje">
+                                <img th:unless="${grupo.viaje != null && grupo.viaje.imagenDestacada != null}"
+                                    th:src="@{/images/default-trip.jpg}" class="card-img-top" alt="Imagen por defecto">
+                                <span class="badge bg-primary position-absolute top-0 start-0 m-2"
+                                    th:if="${grupo.viaje != null && grupo.viaje.destinoPrincipal != null}">
+                                    <i class="bi bi-geo-alt me-1"></i>
+                                    <span th:text="${grupo.viaje.destinoPrincipal}">Destino</span>
+                                </span>
+                                <span class="badge bg-success position-absolute top-0 end-0 m-2"
+                                    th:if="${grupo.viaje != null && grupo.viaje.esVerificado}">
+                                    <i class="bi bi-check-circle me-1"></i>Verificado
+                                </span>
+                            </div>
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                    <h5 class="card-title fw-bold" th:text="${grupo.nombreViaje}">Nombre del Viaje</h5>
+                                    <span class="badge bg-blue-soft text-blue"
+                                        th:if="${grupo.viaje != null && grupo.viaje.tipo != null}"
+                                        th:text="${grupo.viaje.tipo.nombreTipo}">TIPO</span>
+                                </div>
+
+                                <div class="d-flex align-items-center text-muted mb-2" th:if="${grupo.viaje != null}">
+                                    <i class="bi bi-calendar me-2 text-primary"></i>
+                                    <small>
+                                        <span class="fw-medium">Inicio:</span>
+                                        <span
+                                            th:text="${#temporals.format(grupo.viaje.fechaInicio, 'dd MMM yyyy')}">Fecha
+                                            Inicio</span> •
+                                        <span class="fw-medium">Fin:</span>
+                                        <span th:text="${#temporals.format(grupo.viaje.fechaFin, 'dd MMM yyyy')}">Fecha
+                                            Fin</span>
+                                    </small>
+                                </div>
+
+                                <div class="d-flex align-items-center text-muted mb-2">
+                                    <i class="bi bi-people me-2 text-primary"></i>
+                                    <small>
+                                        <span class="fw-medium">Participantes:</span>
+                                        <span
+                                            th:text="${grupo.participantes != null ? grupo.participantes.size() : 0}">0</span>/
+                                        <span>8</span> •
+                                        <span class="fw-medium">Edad:</span>
+                                        <span th:if="${grupo.viaje != null}">
+                                            <span
+                                                th:text="${grupo.viaje.rangoEdadMin != null ? grupo.viaje.rangoEdadMin : '18'}">18</span>-
+                                            <span
+                                                th:text="${grupo.viaje.rangoEdadMax != null ? grupo.viaje.rangoEdadMax : '60'}">60</span>
+                                        </span>
+                                        <span th:unless="${grupo.viaje != null}">Todas las edades</span>
+                                    </small>
+                                </div>
+
+                                <p class="card-text text-muted small mb-3" th:if="${grupo.viaje != null}"
+                                    th:text="${#strings.abbreviate(grupo.viaje.descripcion, 100)}">
+                                    Descripción del viaje...
+                                </p>
+
+                                <div class="d-flex mb-3"
+                                    th:if="${grupo.participantes != null && !grupo.participantes.isEmpty()}">
+                                    <div class="avatar-group">
+                                        <div class="avatar-circle bg-primary text-white">
+                                            <span
+                                                th:text="${#strings.substring(grupo.creador.nombreUsuario, 0, 2)}">CR</span>
+                                        </div>
+                                        <!-- Mostrar hasta 3 participantes más -->
+                                        <th:block th:each="participante, iterStat : ${grupo.participantes}"
+                                            th:if="${iterStat.index < 3 && participante.usuario != grupo.creador}">
+                                            <div class="avatar-circle bg-light">
+                                                <span
+                                                    th:text="${#strings.substring(participante.usuario.nombreUsuario, 0, 2)}">U1</span>
+                                            </div>
+                                        </th:block>
+                                        <!-- Mostrar +X si hay más participantes -->
+                                        <div class="avatar-circle bg-primary-soft text-primary"
+                                            th:if="${grupo.participantes.size() > 4}">
+                                            <span th:text="${'+' + (grupo.participantes.size() - 4)}">+X</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="d-flex flex-wrap gap-1 mb-3"
+                                    th:if="${grupo.etiquetas != null && !grupo.etiquetas.isEmpty()}">
+                                    <span class="badge bg-light text-dark" th:each="etiqueta : ${grupo.etiquetas}"
+                                        th:text="${etiqueta.nombreEtiqueta}">Etiqueta</span>
+                                </div>
+
+                                <!-- Tipo de grupo (solo mujeres, solo hombres) -->
+                                <div class="d-flex flex-wrap gap-1 mb-3"
+                                    th:if="${grupo.tipoGrupo != null && grupo.tipoGrupo != 'Mixto'}">
+                                    <span class="badge bg-purple-soft text-purple"
+                                        th:if="${grupo.tipoGrupo == 'Solo Mujeres'}">Solo mujeres</span>
+                                    <span class="badge bg-blue-soft text-blue"
+                                        th:if="${grupo.tipoGrupo == 'Solo Hombres'}">Solo hombres</span>
+                                </div>
+
+                                <a th:href="@{/grupos/{id}(id=${grupo.idGrupo})}" class="btn btn-primary w-100">
+                                    Ver detalles <i class="bi bi-chevron-right ms-1"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Mensaje si no hay grupos -->
+                <div th:if="${grupos == null || grupos.isEmpty()}" class="alert alert-info text-center my-5">
+                    <i class="bi bi-info-circle-fill me-2"></i>
+                    No se encontraron grupos de viaje. ¡Crea uno nuevo!
+                </div>
+
+                <!-- Paginación -->
+                <div class="d-flex justify-content-center mt-5" th:if="${grupos != null && grupos.size() > 0}">
+                    <nav aria-label="Paginación de resultados">
+                        <ul class="pagination">
+                            <li class="page-item">
+                                <a class="page-link" href="#" aria-label="Anterior">
+                                    <span aria-hidden="true"><i class="bi bi-chevron-left"></i></span>
+                                </a>
+                            </li>
+                            <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                            <li class="page-item"><a class="page-link" href="#">2</a></li>
+                            <li class="page-item"><a class="page-link" href="#">3</a></li>
+                            <li class="page-item">
+                                <a class="page-link" href="#" aria-label="Siguiente">
+                                    <span aria-hidden="true"><i class="bi bi-chevron-right"></i></span>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
         </div>
     </main>
 
     <footer th:replace="fragments/footer :: footer"></footer>
+
+    <!-- Bootstrap JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Script para manejar las etiquetas -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const tagInput = document.getElementById('tagInput');
+            const addTagBtn = document.getElementById('addTagBtn');
+            const tagContainer = document.getElementById('tagContainer');
+            const etiquetasHidden = document.getElementById('etiquetasHidden');
+
+            let tags = [];
+
+            // Función para añadir etiqueta
+            function addTag(tag) {
+                if (tag && !tags.includes(tag)) {
+                    tags.push(tag);
+                    updateTagsDisplay();
+                    updateHiddenField();
+                }
+                tagInput.value = '';
+            }
+
+            // Función para eliminar etiqueta
+            function removeTag(tag) {
+                const index = tags.indexOf(tag);
+                if (index !== -1) {
+                    tags.splice(index, 1);
+                    updateTagsDisplay();
+                    updateHiddenField();
+                }
+            }
+
+            // Actualizar la visualización de etiquetas
+            function updateTagsDisplay() {
+                tagContainer.innerHTML = '';
+                tags.forEach(tag => {
+                    const tagElement = document.createElement('span');
+                    tagElement.className = 'badge bg-light text-dark';
+                    tagElement.innerHTML = `${tag} <i class="bi bi-x-circle" style="cursor: pointer;"></i>`;
+                    tagElement.querySelector('i').addEventListener('click', function () {
+                        removeTag(tag);
+                    });
+                    tagContainer.appendChild(tagElement);
+                });
+            }
+
+            // Actualizar el campo oculto con las etiquetas
+            function updateHiddenField() {
+                etiquetasHidden.value = tags.join(',');
+            }
+
+            // Evento para añadir etiqueta
+            addTagBtn.addEventListener('click', function () {
+                const tag = tagInput.value.trim();
+                if (tag) {
+                    addTag(tag);
+                }
+            });
+
+            // Evento para limpiar el campo de entrada
+            tagInput.addEventListener('input', function () {
+                if (tagInput.value.trim() === '') {
+                    updateTagsDisplay();
+                    updateHiddenField();
+                }
+            });
+        });
+    </script>
 </body>
 
 </html>

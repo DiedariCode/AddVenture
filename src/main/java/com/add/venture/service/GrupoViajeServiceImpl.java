@@ -1,5 +1,6 @@
 package com.add.venture.service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -171,4 +172,24 @@ public class GrupoViajeServiceImpl implements IGrupoViajeService {
     public List<TipoViaje> obtenerTiposViaje() {
         return tipoViajeRepository.findAll();
     }
+
+    @Override
+    public List<GrupoViaje> buscarGrupos(
+        String destino,
+        LocalDate fechaInicio,
+        LocalDate fechaFin,
+        Long idTipoViaje,
+        String tipoGrupo,
+        String rangoEdad,
+        Boolean verificado,
+        List<String> etiquetas,
+        String ordenar) {
+    
+        // En una implementación real, aquí se realizaría una consulta con filtros
+        // Por ahora, simplemente devolvemos todos los grupos
+        return grupoViajeRepository.findAll();
+        
+        // Para una implementación más completa, se podría usar Specification o QueryDSL
+        // para construir consultas dinámicas basadas en los filtros proporcionados
+}
 }
