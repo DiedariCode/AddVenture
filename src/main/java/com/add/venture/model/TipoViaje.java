@@ -13,7 +13,9 @@ import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Entity
 @Table(name = "TipoViaje")
@@ -31,6 +33,8 @@ public class TipoViaje {
     @Column(name = "nombre_tipo", length = 50, unique = true)
     private String nombreTipo;
 
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     @OneToMany(mappedBy = "tipo", cascade = CascadeType.ALL)
     private Set<Viaje> viajes;
 }

@@ -1,139 +1,312 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 
-<head th:replace="fragments/head :: head(title='Crear Grupo de Viaje')">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AddVenture - CrearGrupos</title>
+
+    <!-- BLOQUE DE LINKS FRAGMENTS -->
+    <th:block th:replace="~{fragments/head :: head-links}"></th:block>
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
 </head>
 
 <body>
     <header th:replace="fragments/navbar :: navbar"></header>
 
-    <main class="container my-5">
-        <div class="row">
-            <div class="col-12">
-                <h1 class="mb-4">Crear Nuevo Grupo de Viaje</h1>
+    <!-- Main Content -->
+    <main class="container py-4 py-md-5">
+        <a href="/grupos" class="back-link">
+            <i class="bi bi-arrow-left me-2"></i>
+            Volver
+        </a>
+        <div class="mb-4">
+            <h1 class="fw-bold mb-2">Crea un Nuevo Grupo de Viaje</h1>
+            <p class="text-secondary">
+                Comparte tus planes de viaje y encuentra compañeros con intereses similares para vivir una experiencia
+                única.
+            </p>
+        </div>
 
-                <!-- Mensajes de error -->
-                <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
-                    <span th:text="${error}"></span>
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
+        <!-- Mensajes de error -->
+        <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+            <span th:text="${error}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
 
-                <form th:action="@{/crear-grupo}" th:object="${datosViaje}" method="post" class="needs-validation" novalidate>
-                    <div class="card mb-4">
-                        <div class="card-header bg-primary text-white">
-                            <h5 class="mb-0">Información del Grupo</h5>
-                        </div>
-                        <div class="card-body">
-                            <div class="row g-3">
-                                <!-- Nombre del viaje -->
-                                <div class="col-md-6">
-                                    <label for="nombreViaje" class="form-label">Nombre del Viaje *</label>
-                                    <input type="text" class="form-control" id="nombreViaje" th:field="*{nombreViaje}" required>
-                                    <div class="invalid-feedback" th:if="${#fields.hasErrors('nombreViaje')}" th:errors="*{nombreViaje}">
+        <div class="card mx-auto" style="max-width: 900px;">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Información del Viaje</h5>
+            </div>
+            <div class="card-body p-4">
+                <!-- Tabs -->
+                <ul class="nav nav-tabs mb-4" id="createGroupTabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="info-tab" data-bs-toggle="tab" data-bs-target="#info"
+                            type="button" role="tab">
+                            Información básica
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="location-tab" data-bs-toggle="tab" data-bs-target="#location"
+                            type="button" role="tab">
+                            Punto de encuentro
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="itinerary-tab" data-bs-toggle="tab" data-bs-target="#itinerary"
+                            type="button" role="tab">
+                            Itinerario
+                        </button>
+                    </li>
+                </ul>
+
+                <form th:action="@{/crear-grupo}" th:object="${datosViaje}" method="post" class="needs-validation"
+                    novalidate>
+                    <div class="tab-content" id="createGroupTabContent">
+                        <!-- Tab 1: Información básica -->
+                        <div class="tab-pane fade show active" id="info" role="tabpanel">
+                            <div class="slide-in active">
+                                <div class="mb-3">
+                                    <label for="nombreViaje" class="form-label fw-medium">Nombre del viaje *</label>
+                                    <input type="text" class="form-control" id="nombreViaje" th:field="*{nombreViaje}"
+                                        placeholder="Ej: Aventura en Machu Picchu" required>
+                                    <div class="invalid-feedback" th:if="${#fields.hasErrors('nombreViaje')}"
+                                        th:errors="*{nombreViaje}">
                                         El nombre del viaje es obligatorio.
                                     </div>
                                 </div>
-
-                                <!-- Tipo de grupo -->
-                                <div class="col-md-6">
-                                    <label for="tipoGrupo" class="form-label">Tipo de Grupo *</label>
-                                    <select class="form-select" id="tipoGrupo" th:field="*{tipoGrupo}" required>
-                                        <option value="">Selecciona un tipo</option>
-                                        <option value="Público">Público</option>
-                                        <option value="Privado">Privado</option>
-                                        <option value="Solo Invitación">Solo Invitación</option>
+                                <div class="row mb-3">
+                                    <div class="col-md-6 mb-3 mb-md-0">
+                                        <label for="destinoPrincipal" class="form-label fw-medium">
+                                            <i class="bi bi-geo-alt me-1"></i> Destino principal *
+                                        </label>
+                                        <input type="text" class="form-control" id="destinoPrincipal"
+                                            th:field="*{destinoPrincipal}" placeholder="Ej: Cusco, Perú" required>
+                                        <div class="invalid-feedback" th:if="${#fields.hasErrors('destinoPrincipal')}"
+                                            th:errors="*{destinoPrincipal}">
+                                            El destino principal es obligatorio.
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="idTipoViaje" class="form-label fw-medium">Tipo de viaje</label>
+                                        <select class="form-select" id="idTipoViaje" th:field="*{idTipoViaje}">
+                                            <option value="" selected>Selecciona un tipo</option>
+                                            <option th:each="tipo : ${tiposViaje}" th:value="${tipo.idTipo}"
+                                                th:text="${tipo.nombreTipo}"></option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-md-6 mb-3 mb-md-0">
+                                        <label for="fechaInicio" class="form-label fw-medium">
+                                            <i class="bi bi-calendar me-1"></i> Fecha de inicio *
+                                        </label>
+                                        <input type="date" class="form-control" id="fechaInicio"
+                                            th:field="*{fechaInicio}" required>
+                                        <div class="invalid-feedback" th:if="${#fields.hasErrors('fechaInicio')}"
+                                            th:errors="*{fechaInicio}">
+                                            La fecha de inicio es obligatoria.
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="fechaFin" class="form-label fw-medium">Fecha de fin *</label>
+                                        <input type="date" class="form-control" id="fechaFin" th:field="*{fechaFin}"
+                                            required>
+                                        <div class="invalid-feedback" th:if="${#fields.hasErrors('fechaFin')}"
+                                            th:errors="*{fechaFin}">
+                                            La fecha de fin es obligatoria.
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="participantes" class="form-label fw-medium">
+                                        <i class="bi bi-people me-1"></i> Número máximo de participantes
+                                    </label>
+                                    <select class="form-select" id="participantes" th:field="*{maxParticipantes}">
+                                        <option value="">Selecciona</option>
+                                        <option value="4">4 personas</option>
+                                        <option value="6">6 personas</option>
+                                        <option value="8">8 personas</option>
+                                        <option value="10">10 personas</option>
+                                        <option value="12">12 personas</option>
+                                        <option value="15">15 personas</option>
                                     </select>
-                                    <div class="invalid-feedback" th:if="${#fields.hasErrors('tipoGrupo')}" th:errors="*{tipoGrupo}">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="rango-edad" class="form-label fw-medium">Rango de edad de los
+                                        viajeros</label>
+                                    <div class="row">
+                                        <div class="col-md-6 mb-2 mb-md-0">
+                                            <label for="rangoEdadMin" class="form-label small">Edad mínima</label>
+                                            <div class="input-group">
+                                                <input type="number" class="form-control" id="rangoEdadMin"
+                                                    th:field="*{rangoEdadMin}" min="18" max="80" value="18">
+                                                <span class="input-group-text">años</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="rangoEdadMax" class="form-label small">Edad máxima</label>
+                                            <div class="input-group">
+                                                <input type="number" class="form-control" id="rangoEdadMax"
+                                                    th:field="*{rangoEdadMax}" min="18" max="80" value="60">
+                                                <span class="input-group-text">años</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <small class="text-secondary mt-2 d-block">
+                                        <i class="bi bi-info-circle me-1"></i>
+                                        Buscamos viajeros entre <span id="edad-min-display">18</span> y <span
+                                            id="edad-max-display">60</span> años para este grupo
+                                    </small>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="tipoGrupo" class="form-label fw-medium">Tipo de grupo *</label>
+                                    <select class="form-select" id="tipoGrupo" th:field="*{tipoGrupo}" required>
+                                        <option value="" selected>Selecciona una opción</option>
+                                        <option value="Mixto">Mixto (todos bienvenidos)</option>
+                                        <option value="Solo Mujeres">Solo mujeres</option>
+                                        <option value="Solo Hombres">Solo hombres</option>
+                                    </select>
+                                    <div class="invalid-feedback" th:if="${#fields.hasErrors('tipoGrupo')}"
+                                        th:errors="*{tipoGrupo}">
                                         El tipo de grupo es obligatorio.
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                    </div>
 
-                    <div class="card mb-4">
-                        <div class="card-header bg-primary text-white">
-                            <h5 class="mb-0">Información del Viaje</h5>
-                        </div>
-                        <div class="card-body">
-                            <div class="row g-3">
-                                <!-- Destino principal -->
-                                <div class="col-md-6">
-                                    <label for="destinoPrincipal" class="form-label">Destino Principal *</label>
-                                    <input type="text" class="form-control" id="destinoPrincipal" th:field="*{destinoPrincipal}" required>
-                                    <div class="invalid-feedback" th:if="${#fields.hasErrors('destinoPrincipal')}" th:errors="*{destinoPrincipal}">
-                                        El destino principal es obligatorio.
+                                <div class="mb-3">
+                                    <label for="etiquetas" class="form-label fw-medium">Etiquetas (hashtags)</label>
+                                    <input type="text" class="form-control mb-2" id="etiquetas" name="etiquetasInput"
+                                        placeholder="Añade etiquetas separadas por comas (ej: trekking, playa, aventura)">
+                                    <input type="hidden" th:field="*{etiquetas}" id="etiquetasHidden">
+                                    <div id="tags-container" class="d-flex flex-wrap gap-2">
+                                        <!-- Las etiquetas se mostrarán aquí dinámicamente -->
                                     </div>
                                 </div>
 
-                                <!-- Tipo de viaje -->
-                                <div class="col-md-6">
-                                    <label for="idTipoViaje" class="form-label">Tipo de Viaje</label>
-                                    <select class="form-select" id="idTipoViaje" th:field="*{idTipoViaje}">
-                                        <option value="">Selecciona un tipo</option>
-                                        <option th:each="tipo : ${tiposViaje}" th:value="${tipo.idTipo}" th:text="${tipo.nombreTipo}"></option>
-                                    </select>
-                                </div>
-
-                                <!-- Fecha inicio -->
-                                <div class="col-md-6">
-                                    <label for="fechaInicio" class="form-label">Fecha de Inicio *</label>
-                                    <input type="date" class="form-control" id="fechaInicio" th:field="*{fechaInicio}" required>
-                                    <div class="invalid-feedback" th:if="${#fields.hasErrors('fechaInicio')}" th:errors="*{fechaInicio}">
-                                        La fecha de inicio es obligatoria.
-                                    </div>
-                                </div>
-
-                                <!-- Fecha fin -->
-                                <div class="col-md-6">
-                                    <label for="fechaFin" class="form-label">Fecha de Fin *</label>
-                                    <input type="date" class="form-control" id="fechaFin" th:field="*{fechaFin}" required>
-                                    <div class="invalid-feedback" th:if="${#fields.hasErrors('fechaFin')}" th:errors="*{fechaFin}">
-                                        La fecha de fin es obligatoria.
-                                    </div>
-                                </div>
-
-                                <!-- Descripción -->
-                                <div class="col-12">
-                                    <label for="descripcion" class="form-label">Descripción *</label>
-                                    <textarea class="form-control" id="descripcion" th:field="*{descripcion}" rows="4" required></textarea>
-                                    <div class="invalid-feedback" th:if="${#fields.hasErrors('descripcion')}" th:errors="*{descripcion}">
+                                <div class="mb-3">
+                                    <label for="descripcion" class="form-label fw-medium">Descripción del viaje
+                                        *</label>
+                                    <textarea class="form-control" id="descripcion" th:field="*{descripcion}" rows="4"
+                                        placeholder="Describe los detalles del viaje, actividades planeadas, qué tipo de viajeros buscas, etc."
+                                        required></textarea>
+                                    <div class="invalid-feedback" th:if="${#fields.hasErrors('descripcion')}"
+                                        th:errors="*{descripcion}">
                                         La descripción es obligatoria.
                                     </div>
                                 </div>
 
-                                <!-- Punto de encuentro -->
-                                <div class="col-12">
-                                    <label for="puntoEncuentro" class="form-label">Punto de Encuentro *</label>
-                                    <textarea class="form-control" id="puntoEncuentro" th:field="*{puntoEncuentro}" rows="2" required></textarea>
-                                    <div class="invalid-feedback" th:if="${#fields.hasErrors('puntoEncuentro')}" th:errors="*{puntoEncuentro}">
+                                <div class="mb-3">
+                                    <label for="imagenDestacada" class="form-label fw-medium">
+                                        <i class="bi bi-upload me-1"></i> Imagen destacada (URL)
+                                    </label>
+                                    <input type="text" class="form-control" id="imagenDestacada"
+                                        th:field="*{imagenDestacada}"
+                                        placeholder="Ingresa la URL de una imagen para tu grupo">
+                                </div>
+
+                                <div class="d-flex justify-content-end">
+                                    <button type="button" class="btn btn-primary" id="to-location-tab">
+                                        Continuar <i class="bi bi-chevron-down ms-1"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Tab 2: Punto de encuentro -->
+                        <div class="tab-pane fade" id="location" role="tabpanel">
+                            <div class="slide-in">
+                                <div class="mb-3">
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <label for="puntoEncuentro" class="form-label fw-medium">Punto de encuentro
+                                            *</label>
+                                        <span class="badge bg-info text-white">
+                                            <i class="bi bi-info-circle me-1"></i> Importante para los participantes
+                                        </span>
+                                    </div>
+                                    <textarea class="form-control" id="puntoEncuentro" th:field="*{puntoEncuentro}"
+                                        rows="3"
+                                        placeholder="Describe el punto de encuentro con detalles (dirección, referencias, etc.)"
+                                        required></textarea>
+                                    <div class="invalid-feedback" th:if="${#fields.hasErrors('puntoEncuentro')}"
+                                        th:errors="*{puntoEncuentro}">
                                         El punto de encuentro es obligatorio.
                                     </div>
                                 </div>
 
-                                <!-- Imagen destacada -->
-                                <div class="col-12">
-                                    <label for="imagenDestacada" class="form-label">URL de Imagen Destacada</label>
-                                    <input type="text" class="form-control" id="imagenDestacada" th:field="*{imagenDestacada}">
+                                <div class="alert alert-info mb-4">
+                                    <h6 class="fw-medium mb-2">
+                                        <i class="bi bi-info-circle me-1"></i>
+                                        ¿Por qué es importante el punto de encuentro?
+                                    </h6>
+                                    <p class="small mb-0">
+                                        El punto de encuentro es donde todos los participantes se reunirán al inicio del
+                                        viaje. Elige un lugar fácil de encontrar y accesible para todos, como un
+                                        aeropuerto,
+                                        una plaza principal o un hotel conocido.
+                                    </p>
                                 </div>
 
-                                <!-- Rango de edad -->
-                                <div class="col-md-6">
-                                    <label for="rangoEdadMin" class="form-label">Edad Mínima</label>
-                                    <input type="number" class="form-control" id="rangoEdadMin" th:field="*{rangoEdadMin}" min="0" max="120">
-                                </div>
-
-                                <div class="col-md-6">
-                                    <label for="rangoEdadMax" class="form-label">Edad Máxima</label>
-                                    <input type="number" class="form-control" id="rangoEdadMax" th:field="*{rangoEdadMax}" min="0" max="120">
+                                <div class="d-flex justify-content-between">
+                                    <button type="button" class="btn btn-outline-secondary" id="back-to-info-tab">
+                                        <i class="bi bi-chevron-up me-1"></i> Anterior
+                                    </button>
+                                    <button type="button" class="btn btn-primary" id="to-itinerary-tab">
+                                        Continuar <i class="bi bi-chevron-down ms-1"></i>
+                                    </button>
                                 </div>
                             </div>
                         </div>
-                    </div>
 
-                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                        <a th:href="@{/grupos}" class="btn btn-secondary me-md-2">Cancelar</a>
-                        <button type="submit" class="btn btn-primary">Crear Grupo</button>
+                        <!-- Tab 3: Itinerario -->
+                        <div class="tab-pane fade" id="itinerary" role="tabpanel">
+                            <div class="slide-in">
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <h5 class="fw-medium">Itinerario del viaje</h5>
+                                    <span id="trip-days-badge" class="badge bg-primary">0 días de viaje</span>
+                                </div>
+
+                                <div id="itinerary-content">
+                                    <div id="no-dates-warning" class="alert alert-warning">
+                                        <p class="d-flex align-items-center mb-0">
+                                            <i class="bi bi-info-circle me-2"></i>
+                                            Selecciona las fechas de inicio y fin en la sección de información básica
+                                            para
+                                            generar el itinerario.
+                                        </p>
+                                    </div>
+
+                                    <div id="itinerary-container" class="d-none">
+                                        <div class="alert alert-info mb-4">
+                                            <p class="small mb-0">
+                                                Describe las actividades planeadas para cada día del viaje. Esto ayudará
+                                                a
+                                                los potenciales participantes a entender mejor la experiencia que
+                                                vivirán.
+                                            </p>
+                                        </div>
+
+                                        <div class="accordion" id="itineraryAccordion">
+                                            <!-- Itinerary days will be populated by JavaScript -->
+                                        </div>
+
+                                        <input type="hidden" id="diasItinerarioJson" th:field="*{diasItinerarioJson}">
+                                    </div>
+                                </div>
+
+                                <div class="d-flex justify-content-between mt-4">
+                                    <button type="button" class="btn btn-outline-secondary" id="back-to-location-tab">
+                                        <i class="bi bi-chevron-up me-1"></i> Anterior
+                                    </button>
+                                    <button type="submit" class="btn btn-primary" id="create-group-btn">
+                                        <i class="bi bi-plus-lg me-1"></i> Crear Grupo
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </form>
             </div>
@@ -142,29 +315,11 @@
 
     <footer th:replace="fragments/footer :: footer"></footer>
 
-    <!-- Script para validación del formulario -->
-    <script>
-        // Example starter JavaScript for disabling form submissions if there are invalid fields
-        (function () {
-            'use strict'
-
-            // Fetch all the forms we want to apply custom Bootstrap validation styles to
-            var forms = document.querySelectorAll('.needs-validation')
-
-            // Loop over them and prevent submission
-            Array.prototype.slice.call(forms)
-                .forEach(function (form) {
-                    form.addEventListener('submit', function (event) {
-                        if (!form.checkValidity()) {
-                            event.preventDefault()
-                            event.stopPropagation()
-                        }
-
-                        form.classList.add('was-validated')
-                    }, false)
-                })
-        })()
-    </script>
+    <!-- Bootstrap JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Script para la creación de grupos -->
+    <script th:src="@{/js/crear-grupo.js}"></script>
 </body>
 
 </html>

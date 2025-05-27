@@ -16,6 +16,8 @@ import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import lombok.NoArgsConstructor;
 
 @Entity
@@ -65,10 +67,14 @@ public class Viaje {
     private String estado = "activo";
 
     // Relaciones
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     @ManyToOne
     @JoinColumn(name = "id_tipo")
     private TipoViaje tipo;
 
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     @OneToOne(mappedBy = "viaje", cascade = CascadeType.ALL)
     private GrupoViaje grupo;
 }

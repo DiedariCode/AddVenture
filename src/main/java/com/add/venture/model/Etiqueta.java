@@ -12,7 +12,9 @@ import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Entity
 @Table(name = "Etiqueta")
@@ -30,9 +32,13 @@ public class Etiqueta {
     @Column(name = "nombre_etiqueta", length = 50, unique = true)
     private String nombreEtiqueta;
 
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     @ManyToMany(mappedBy = "etiquetas")
     private Set<Usuario> usuarios;
 
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     @ManyToMany(mappedBy = "etiquetas")
     private Set<GrupoViaje> grupos;
 }

@@ -51,9 +51,13 @@ public class CrearGrupoViajeDTO {
     
     private Long idTipoViaje;
     
-    // Para itinerario inicial (opcional)
-    private List<DiaItinerarioDTO> diasItinerario;
-    
-    // Para etiquetas (opcional)
+    // Nuevos campos
+    private Integer maxParticipantes;
     private List<String> etiquetas;
+    
+    // Para almacenar el JSON del itinerario
+    private String diasItinerarioJson;
+    
+    // Para itinerario (se usará en el servicio)
+    private List<DiaItinerarioDTO> diasItinerario;
 }

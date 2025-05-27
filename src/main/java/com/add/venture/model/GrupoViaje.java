@@ -19,6 +19,8 @@ import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import lombok.NoArgsConstructor;
 
 @Entity
@@ -47,27 +49,45 @@ public class GrupoViaje {
     private String estado = "activo";
 
     // Relaciones
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     @ManyToOne
     @JoinColumn(name = "id_creador")
     private Usuario creador;
 
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     @OneToOne
     @JoinColumn(name = "id_viaje", unique = true)
     private Viaje viaje;
 
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     @ManyToMany
-    @JoinTable(name = "GrupoEtiqueta", joinColumns = @JoinColumn(name = "id_grupo"), inverseJoinColumns = @JoinColumn(name = "id_etiqueta"))
+    @JoinTable(
+        name = "GrupoEtiqueta", 
+        joinColumns = @JoinColumn(name = "id_grupo"), 
+        inverseJoinColumns = @JoinColumn(name = "id_etiqueta")
+    )
     private Set<Etiqueta> etiquetas;
 
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     @OneToMany(mappedBy = "grupo", cascade = CascadeType.ALL)
     private Set<Itinerario> itinerarios;
 
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     @OneToMany(mappedBy = "grupo", cascade = CascadeType.ALL)
     private Set<ParticipanteGrupo> participantes;
 
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     @OneToMany(mappedBy = "grupo", cascade = CascadeType.ALL)
     private Set<MensajeGrupo> mensajes;
-
+    
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     @OneToMany(mappedBy = "grupo", cascade = CascadeType.ALL)
     private Set<Resena> resenas;
 }

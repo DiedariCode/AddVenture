@@ -1,6 +1,7 @@
 package com.add.venture.service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -11,6 +12,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.add.venture.dto.CrearGrupoViajeDTO;
 import com.add.venture.dto.DiaItinerarioDTO;
 import com.add.venture.model.Etiqueta;
@@ -44,6 +48,8 @@ public class GrupoViajeServiceImpl implements IGrupoViajeService {
     
     @Autowired
     private EtiquetaRepository etiquetaRepository;
+    
+    private ObjectMapper objectMapper = new ObjectMapper();
     
     @Override
     @Transactional
@@ -87,8 +93,12 @@ public class GrupoViajeServiceImpl implements IGrupoViajeService {
         grupo.setCreador(creador);
         grupo.setViaje(viaje);
         
-        // Guardar el grupo inicialmente para obtener su ID
+        // Guardar el grupo sin establecer la relación bidireccional
         grupo = grupoViajeRepository.save(grupo);
+        
+        // Establecer la relación bidireccional manualmente después de guardar
+        // pero no volver a guardar el viaje para evitar la recursión
+        viaje.setGrupo(grupo);
         
         // Procesar etiquetas si se especificaron
         if (dto.getEtiquetas() != null && !dto.getEtiquetas().isEmpty()) {
@@ -105,9 +115,6 @@ public class GrupoViajeServiceImpl implements IGrupoViajeService {
             grupo.setEtiquetas(etiquetas);
         }
         
-        // Guardar el grupo con las etiquetas
-        grupo = grupoViajeRepository.save(grupo);
-        
         // Añadir al creador como participante
         ParticipanteGrupo participante = new ParticipanteGrupo();
         participante.setUsuario(creador);
@@ -115,6 +122,24 @@ public class GrupoViajeServiceImpl implements IGrupoViajeService {
         participante.setRolParticipante("CREADOR");
         participante.setEstadoSolicitud(EstadoSolicitud.ACEPTADO);
         participante.setFechaUnion(LocalDateTime.now());
+        
+        // Inicializar conjuntos si son nulos
+        if (grupo.getParticipantes() == null) {
+            grupo.setParticipantes(new HashSet<>());
+        }
+        grupo.getParticipantes().add(participante);
+        // Procesar itinerario desde JSON si existe
+        if (dto.getDiasItinerarioJson() != null && !dto.getDiasItinerarioJson().isEmpty()) {
+            try {
+                List<DiaItinerarioDTO> diasItinerario = objectMapper.readValue(
+                    dto.getDiasItinerarioJson(), 
+                    new TypeReference<List<DiaItinerarioDTO>>() {}
+                );
+                dto.setDiasItinerario(diasItinerario);
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException("Error al procesar el itinerario: " + e.getMessage());
+            }
+        }
         
         // Procesar itinerario si se especificó
         if (dto.getDiasItinerario() != null && !dto.getDiasItinerario().isEmpty()) {
@@ -133,7 +158,7 @@ public class GrupoViajeServiceImpl implements IGrupoViajeService {
             grupo.setItinerarios(itinerarios);
         }
         
-        // Guardar el grupo con todas sus relaciones
+        // Guardar el grupo final sin volver a establecer la relación con el viaje
         return grupoViajeRepository.save(grupo);
     }
 

@@ -18,6 +18,9 @@ import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.EqualsAndHashCode.Exclude;
+import lombok.ToString;
 import lombok.NoArgsConstructor;
 
 @Entity
@@ -26,11 +29,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Usuario {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_usuario")
+    @EqualsAndHashCode.Include
     private Long idUsuario;
 
     @Column(length = 50)
@@ -43,6 +48,7 @@ public class Usuario {
     private String nombreUsuario;
 
     @Column(length = 100, unique = true)
+    @EqualsAndHashCode.Include
     private String email;
 
     @Column(length = 20, unique = true)
@@ -83,27 +89,28 @@ public class Usuario {
     @Column(length = 20)
     private String estado = "activo";
 
-    // Relaciones
+    // Excluir las colecciones que causan referencias circulares
+    @EqualsAndHashCode.Exclude
     @ManyToMany
-    @JoinTable(name = "UsuarioEtiqueta", joinColumns = @JoinColumn(name = "id_usuario"), inverseJoinColumns = @JoinColumn(name = "id_etiqueta"))
+    @JoinTable(name = "UsuarioEtiqueta", 
+               joinColumns = @JoinColumn(name = "id_usuario"), 
+               inverseJoinColumns = @JoinColumn(name = "id_etiqueta"))
     private Set<Etiqueta> etiquetas;
 
-    @OneToMany(mappedBy = "creador", cascade = CascadeType.ALL)
+    // Excluir otras colecciones que puedan causar referencias circulares
+    @EqualsAndHashCode.Exclude
+    @OneToMany(mappedBy = "creador")
+    @ToString.Exclude
     private Set<GrupoViaje> gruposCreados;
 
-    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
-    private Set<ParticipanteGrupo> participaciones;
+    // Otras relaciones que deban ser excluidas
 
-    @OneToMany(mappedBy = "autor", cascade = CascadeType.ALL)
-    private Set<Resena> resenasEscritas;
-
-    @OneToMany(mappedBy = "destinatario", cascade = CascadeType.ALL)
-    private Set<Resena> resenasRecibidas;
-
-    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
-    private Set<Notificacion> notificaciones;
-
+    // Añadir la relación con Logro
     @ManyToMany
-    @JoinTable(name = "UsuarioLogro", joinColumns = @JoinColumn(name = "id_usuario"), inverseJoinColumns = @JoinColumn(name = "id_logro"))
+    @JoinTable(
+        name = "UsuarioLogro", 
+        joinColumns = @JoinColumn(name = "id_usuario"), 
+        inverseJoinColumns = @JoinColumn(name = "id_logro")
+    )
     private Set<Logro> logros;
 }
