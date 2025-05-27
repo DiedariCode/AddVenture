@@ -1,86 +1,109 @@
 package com.add.venture.model;
 
-import java.math.BigDecimal;
-import java.sql.Timestamp;
-
 import java.time.LocalDate;
-import java.util.List;
-
-import jakarta.validation.constraints.DecimalMax;
-import jakarta.validation.constraints.DecimalMin;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
-
+import java.time.LocalDateTime;
+import java.util.Set;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
+@Table(name = "Usuario")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Usuario {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_usuario")
     private Long idUsuario;
 
-    @NotBlank(message = "El nombre es obligatorio")
+    @Column(length = 50)
     private String nombre;
 
-    @NotBlank(message = "Los apellidos son obligatorios")
+    @Column(length = 50)
     private String apellidos;
 
-    @NotBlank(message = "El nombre de usuario es obligatorio")
+    @Column(name = "nombre_usuario", length = 30, unique = true)
     private String nombreUsuario;
 
-    @Email(message = "El email debe ser válido")
-    @NotBlank(message = "El email es obligatorio")
+    @Column(length = 100, unique = true)
     private String email;
 
-    @Pattern(regexp = "\\d{9}", message = "El teléfono debe tener 9 DIGITOS ANIMAL")
+    @Column(length = 20, unique = true)
     private String telefono;
 
+    @Column(length = 50)
     private String pais;
 
+    @Column(length = 50)
     private String ciudad;
 
-    @NotNull(message = "La fecha de nacimiento es obligatoria")
+    @Column(name = "fecha_nacimiento")
     private LocalDate fechaNacimiento;
 
-    @NotBlank(message = "La contraseña no puede estar vacía")
+    @Column(name = "contraseña_hash")
     private String contrasenaHash;
 
+    @Column(name = "foto_perfil")
     private String fotoPerfil;
 
+    @Column(name = "foto_portada")
     private String fotoPortada;
 
-    @Size(max = 1000, message = "La descripción no puede superar los 1000 caracteres")
     private String descripcion;
 
-    private Timestamp fechaRegistro;
+    @Column(name = "fecha_registro")
+    private LocalDateTime fechaRegistro = LocalDateTime.now();
 
-    private boolean esVerificado;
+    @Column(name = "es_verificado")
+    private Boolean esVerificado = false;
 
-    @DecimalMin(value = "0.0", message = "La puntuación no puede ser negativa")
-    @DecimalMax(value = "5.0", message = "La puntuación máxima es 5.0")
-    private BigDecimal puntosReputacion;
+    @Column(name = "estado_cuenta", length = 20)
+    private String estadoCuenta = "activa";
 
-    private int resenasPositivas;
+    @Column(name = "fecha_modificacion")
+    private LocalDateTime fechaModificacion;
 
-    @NotBlank(message = "El estado de la cuenta es obligatorio")
-    private String estadoCuenta; // ACTIVA, ELIMINADA, SUSPENDIDA
+    @Column(length = 20)
+    private String estado = "activo";
 
-    @OneToMany(mappedBy = "idCreador", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<GrupoViaje> gruposCreados;
+    // Relaciones
+    @ManyToMany
+    @JoinTable(name = "UsuarioEtiqueta", joinColumns = @JoinColumn(name = "id_usuario"), inverseJoinColumns = @JoinColumn(name = "id_etiqueta"))
+    private Set<Etiqueta> etiquetas;
+
+    @OneToMany(mappedBy = "creador", cascade = CascadeType.ALL)
+    private Set<GrupoViaje> gruposCreados;
+
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
+    private Set<ParticipanteGrupo> participaciones;
+
+    @OneToMany(mappedBy = "autor", cascade = CascadeType.ALL)
+    private Set<Resena> resenasEscritas;
+
+    @OneToMany(mappedBy = "destinatario", cascade = CascadeType.ALL)
+    private Set<Resena> resenasRecibidas;
+
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
+    private Set<Notificacion> notificaciones;
+
+    @ManyToMany
+    @JoinTable(name = "UsuarioLogro", joinColumns = @JoinColumn(name = "id_usuario"), inverseJoinColumns = @JoinColumn(name = "id_logro"))
+    private Set<Logro> logros;
 }

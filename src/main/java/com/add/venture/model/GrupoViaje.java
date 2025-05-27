@@ -1,69 +1,73 @@
 package com.add.venture.model;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Set;
 
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
-
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
+@Table(name = "GrupoViaje")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class GrupoViaje {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idGrupo;
+    @Column(name = "id_grupo")
+    private Integer idGrupo;
 
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "id_creador", nullable = false)
-    @NotNull(message = "El creador del grupo es obligatorio")
-    private Usuario idCreador;
-
-    @NotBlank(message = "El nombre del viaje no puede estar en blanco")
+    @Column(name = "nombre_viaje", length = 100)
     private String nombreViaje;
 
-    @NotBlank(message = "El destino principal es obligatorio")
-    private String destinoPrincipal;
-
-    @NotBlank(message = "El tipo de viaje es obligatorio")
-    private String tipoViaje;
-
-    @NotNull(message = "La fecha de inicio es obligatoria")
-    private LocalDate fechaInicio;
-
-    @NotNull(message = "La fecha de fin es obligatoria")
-    private LocalDate fechaFin;
-
-    @Min(value = 18, message = "La edad mínima debe ser mayor o igual a 18")
-    private int rangoEdadMin;
-
-    @Max(value = 35, message = "La edad máxima debe ser al menos 35")
-    private int rangoEdadMax;
-
-    @NotBlank(message = "El tipo de grupo es obligatorio")
+    @Column(name = "tipo_grupo", length = 50)
     private String tipoGrupo;
 
-    @Size(max = 1000, message = "La descripción no puede superar los 1000 caracteres")
-    private String descripcion;
+    @Column(name = "fecha_creacion")
+    private LocalDateTime fechaCreacion = LocalDateTime.now();
 
-    @NotBlank(message = "El punto de encuentro es obligatorio")
-    private String puntoEncuentro;
+    @Column(length = 20)
+    private String estado = "activo";
 
-    private String imagenDestacada;
+    // Relaciones
+    @ManyToOne
+    @JoinColumn(name = "id_creador")
+    private Usuario creador;
 
-    private Boolean esVerificado;
+    @OneToOne
+    @JoinColumn(name = "id_viaje", unique = true)
+    private Viaje viaje;
+
+    @ManyToMany
+    @JoinTable(name = "GrupoEtiqueta", joinColumns = @JoinColumn(name = "id_grupo"), inverseJoinColumns = @JoinColumn(name = "id_etiqueta"))
+    private Set<Etiqueta> etiquetas;
+
+    @OneToMany(mappedBy = "grupo", cascade = CascadeType.ALL)
+    private Set<Itinerario> itinerarios;
+
+    @OneToMany(mappedBy = "grupo", cascade = CascadeType.ALL)
+    private Set<ParticipanteGrupo> participantes;
+
+    @OneToMany(mappedBy = "grupo", cascade = CascadeType.ALL)
+    private Set<MensajeGrupo> mensajes;
+
+    @OneToMany(mappedBy = "grupo", cascade = CascadeType.ALL)
+    private Set<Resena> resenas;
 }

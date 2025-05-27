@@ -42,10 +42,8 @@ public class UsuarioServiceImpl implements IUsuarioService {
         usuario.setCiudad(dto.getCiudad());
         usuario.setFechaNacimiento(dto.getFechaNacimiento());
         usuario.setContrasenaHash(passwordEncoder.encode(dto.getContrasena()));
-        usuario.setFechaRegistro(Timestamp.valueOf(LocalDateTime.now()));
+        usuario.setFechaRegistro(LocalDateTime.now());
         usuario.setEsVerificado(false);
-        usuario.setPuntosReputacion(BigDecimal.valueOf(0));
-        usuario.setResenasPositivas(0);
         usuario.setEstadoCuenta("ACTIVA");
         usuarioRepository.save(usuario);
     }
@@ -111,9 +109,10 @@ public class UsuarioServiceImpl implements IUsuarioService {
                         usuario.getCiudad(),
                         usuario.getFechaNacimiento(),
                         usuario.getDescripcion(),
-                        usuario.getFotoPerfil(), // <-- asumiendo que son String
+                        usuario.getFotoPerfil(),
                         usuario.getFotoPortada(),
-                        usuario.getFechaRegistro()))
+                        usuario.getFechaRegistro() != null ? Timestamp.valueOf(usuario.getFechaRegistro()) : null // PASO DE Timestamp a LocalDateTime
+                ))
                 .orElse(null);
     }
 
