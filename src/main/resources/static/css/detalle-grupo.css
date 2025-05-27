@@ -1,0 +1,180 @@
+/* Custom styles for AddVenture */
+:root {
+    --primary: #3b82f6;
+    --primary-dark: #2563eb;
+    --primary-light: #dbeafe;
+    --primary-border: #bfdbfe;
+}
+
+body {
+    background-color: #f6f4fd;
+}
+
+.avatar-circle {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: 600;
+    border: 2px solid white;
+    position: relative;
+    /* para posicionar la img absoluta dentro */
+    overflow: hidden;
+    /* recorta la imagen para que no se salga del círculo */
+}
+
+.avatar-circle img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+    position: absolute;
+    /* opcional, puedes probar sin esto */
+    top: 0;
+    left: 0;
+}
+.avatar-group {
+    display: flex;
+}
+
+.avatar-group .avatar-circle {
+    margin-left: -8px;
+}
+
+.avatar-group .avatar-circle:first-child {
+    margin-left: 0;
+}
+
+.dropdown-toggle::after {
+    color: white !important;
+}
+
+.navbar {
+    background-color: var(--primary);
+}
+
+.navbar-brand {
+    font-weight: 700;
+}
+
+/* End Navbar styles */
+
+.member-card {
+    background-color: #fff;
+    border: 1px solid #dee2e6;
+    border-radius: 0.5rem;
+    padding: 1rem;
+    height: 100%;
+    position: relative;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+}
+
+.avatar-large {
+    width: 80px;
+    height: 80px;
+    font-size: 1.5rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.organizer-label {
+    font-size: 0.85rem;
+    color: #6c757d;
+}
+
+/* Avatar styles */
+
+.avatar-small {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 0.8rem;
+}
+
+.avatar-large {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 1.2rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border: 2px solid #fff;
+}
+
+/* Hero image styles */
+.hero-image {
+    border-radius: 10px;
+    height: 300px;
+    background-size: cover;
+    background-position: center;
+    position: relative;
+}
+
+.overlay-gradient {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent);
+}
+
+/* Chat styles */
+.chat-container {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.chat-bubble {
+    padding: 10px 15px;
+    border-radius: 18px;
+    max-width: 80%;
+}
+
+.chat-info {
+    font-size: 0.8rem;
+    margin-top: 4px;
+}
+
+/* Custom tab styles */
+.nav-tabs .nav-link {
+    color: #6c757d;
+    border: none;
+    padding: 0.75rem 1rem;
+    font-weight: 500;
+}
+
+.nav-tabs .nav-link.active {
+    color: #0d6efd;
+    border-bottom: 2px solid #0d6efd;
+    background-color: transparent;
+}
+
+.nav-tabs .nav-link:hover:not(.active) {
+    border-bottom: 2px solid #dee2e6;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .hero-image {
+        height: 200px;
+    }
+
+    .avatar-large {
+        width: 50px;
+        height: 50px;
+        font-size: 1rem;
+    }
+}

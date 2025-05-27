@@ -92,9 +92,7 @@ public class Usuario {
     // Excluir las colecciones que causan referencias circulares
     @EqualsAndHashCode.Exclude
     @ManyToMany
-    @JoinTable(name = "UsuarioEtiqueta", 
-               joinColumns = @JoinColumn(name = "id_usuario"), 
-               inverseJoinColumns = @JoinColumn(name = "id_etiqueta"))
+    @JoinTable(name = "UsuarioEtiqueta", joinColumns = @JoinColumn(name = "id_usuario"), inverseJoinColumns = @JoinColumn(name = "id_etiqueta"))
     private Set<Etiqueta> etiquetas;
 
     // Excluir otras colecciones que puedan causar referencias circulares
@@ -107,10 +105,20 @@ public class Usuario {
 
     // Añadir la relación con Logro
     @ManyToMany
-    @JoinTable(
-        name = "UsuarioLogro", 
-        joinColumns = @JoinColumn(name = "id_usuario"), 
-        inverseJoinColumns = @JoinColumn(name = "id_logro")
-    )
+    @JoinTable(name = "UsuarioLogro", joinColumns = @JoinColumn(name = "id_usuario"), inverseJoinColumns = @JoinColumn(name = "id_logro"))
     private Set<Logro> logros;
+
+    public String getIniciales() {
+        StringBuilder iniciales = new StringBuilder();
+
+        if (nombre != null && !nombre.isBlank()) {
+            iniciales.append(Character.toUpperCase(nombre.trim().charAt(0)));
+        }
+
+        if (apellidos != null && !apellidos.isBlank()) {
+            iniciales.append(Character.toUpperCase(apellidos.trim().charAt(0)));
+        }
+
+        return iniciales.toString();
+    }
 }
