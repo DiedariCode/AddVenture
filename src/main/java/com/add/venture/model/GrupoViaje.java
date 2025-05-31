@@ -34,7 +34,7 @@ public class GrupoViaje {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_grupo")
-    private Integer idGrupo;
+    private Long idGrupo;
 
     @Column(name = "nombre_viaje", length = 100)
     private String nombreViaje;

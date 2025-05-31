@@ -86,7 +86,7 @@ public class GrupoViajeController {
     }
 
     @GetMapping("/{id}")
-    public String verDetallesGrupo(@PathVariable("id") Integer idGrupo, Model model) {
+    public String verDetallesGrupo(@PathVariable("id") Long idGrupo, Model model) {
         // Cargar datos del usuario para la navbar y perfil
         usuarioAutenticadoHelper.cargarDatosUsuarioParaNavbar(model);
         usuarioAutenticadoHelper.cargarUsuarioParaPerfil(model);
@@ -115,7 +115,7 @@ public class GrupoViajeController {
 
     @PostMapping("/{id}/unirse")
     @ResponseBody
-    public String unirseAlGrupo(@PathVariable("id") Integer idGrupo) {
+    public String unirseAlGrupo(@PathVariable("id") Long idGrupo) {
         // Obtener el usuario autenticado
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth == null || !auth.isAuthenticated() || auth.getName().equals("anonymousUser")) {
@@ -149,7 +149,7 @@ public class GrupoViajeController {
     }
 
     @PostMapping("/{id}/abandonar")
-    public String abandonarGrupo(@PathVariable("id") Integer idGrupo, RedirectAttributes redirectAttributes) {
+    public String abandonarGrupo(@PathVariable("id") Long idGrupo, RedirectAttributes redirectAttributes) {
         // Obtener el usuario autenticado
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth == null || !auth.isAuthenticated() || auth.getName().equals("anonymousUser")) {
@@ -187,7 +187,7 @@ public class GrupoViajeController {
 
     @PostMapping("/{id}/expulsar")
     public String expulsarMiembro(
-            @PathVariable("id") Integer idGrupo,
+            @PathVariable("id") Long idGrupo,
             @RequestParam("userId") Long userId,
             @RequestParam("expulsionReason") String expulsionReason,
             @RequestParam(value = "expulsionComment", required = false) String expulsionComment,
@@ -244,7 +244,7 @@ public class GrupoViajeController {
     @PostMapping("/{id}/mensaje")
     @ResponseBody
     public String enviarMensaje(
-            @PathVariable("id") Integer idGrupo,
+            @PathVariable("id") Long idGrupo,
             @RequestBody MensajeRequest mensajeRequest) {
 
         // Obtener el usuario autenticado
@@ -321,7 +321,7 @@ public class GrupoViajeController {
     }
 
     @GetMapping("/editar/{id}")
-    public String editarGrupo(@PathVariable("id") Integer idGrupo, Model model) {
+    public String editarGrupo(@PathVariable("id") Long idGrupo, Model model) {
         usuarioAutenticadoHelper.cargarDatosUsuarioParaNavbar(model);
         usuarioAutenticadoHelper.cargarUsuarioParaPerfil(model);
 
@@ -347,7 +347,7 @@ public class GrupoViajeController {
     }
 
     @PostMapping("/editar/{id}")
-    public String actualizarGrupo(@PathVariable("id") Integer idGrupo,
+    public String actualizarGrupo(@PathVariable("id") Long idGrupo,
             @Valid @ModelAttribute GrupoViaje grupo,
             BindingResult result,
             Model model,

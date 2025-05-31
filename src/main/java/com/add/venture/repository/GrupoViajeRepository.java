@@ -10,7 +10,7 @@ import com.add.venture.model.GrupoViaje;
 import com.add.venture.model.Usuario;
 import com.add.venture.model.Viaje;
 
-public interface GrupoViajeRepository extends JpaRepository<GrupoViaje, Integer> {
+public interface GrupoViajeRepository extends JpaRepository<GrupoViaje, Long> {
 
     /**
      * Verifica si un viaje ya está asignado a algún grupo

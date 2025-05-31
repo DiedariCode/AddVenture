@@ -193,8 +193,102 @@ public class GrupoViajeServiceImpl implements IGrupoViajeService {
     }
 
     @Override
-    public GrupoViaje buscarGrupoPorId(Integer id) {
+    public GrupoViaje buscarGrupoPorId(Long id) {
         return grupoViajeRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Grupo de viaje no encontrado"));
     }
+
+    @Override
+    public GrupoViaje actualizarGrupoViaje(Long idGrupo, CrearGrupoViajeDTO dto) {
+        // Buscar el grupo por id
+        GrupoViaje grupo = grupoViajeRepository.findById(idGrupo)
+                .orElseThrow(() -> new RuntimeException("Grupo de viaje no encontrado"));
+
+        // Obtener el viaje asociado
+        Viaje viaje = grupo.getViaje();
+        if (viaje == null) {
+            throw new RuntimeException("Viaje asociado no encontrado");
+        }
+
+        // Actualizar campos del viaje
+        viaje.setDestinoPrincipal(dto.getDestinoPrincipal());
+        viaje.setFechaInicio(dto.getFechaInicio());
+        viaje.setFechaFin(dto.getFechaFin());
+        viaje.setDescripcion(dto.getDescripcion());
+        viaje.setPuntoEncuentro(dto.getPuntoEncuentro());
+        viaje.setImagenDestacada(dto.getImagenDestacada());
+        viaje.setRangoEdadMin(dto.getRangoEdadMin());
+        viaje.setRangoEdadMax(dto.getRangoEdadMax());
+        // No se actualiza fechaCreacion ni estado, salvo que quieras hacerlo
+
+        // Actualizar tipo de viaje si se especificó
+        if (dto.getIdTipoViaje() != null) {
+            TipoViaje tipoViaje = tipoViajeRepository.findById(dto.getIdTipoViaje())
+                    .orElseThrow(() -> new RuntimeException("Tipo de viaje no encontrado"));
+            viaje.setTipo(tipoViaje);
+        } else {
+            viaje.setTipo(null);
+        }
+
+        viajeRepository.save(viaje);
+
+        // Actualizar campos del grupo
+        grupo.setNombreViaje(dto.getNombreViaje());
+        grupo.setTipoGrupo(dto.getTipoGrupo());
+        // No se actualiza fechaCreacion ni estado salvo que quieras hacerlo
+
+        // Actualizar etiquetas
+        if (dto.getEtiquetas() != null) {
+            Set<Etiqueta> etiquetas = new HashSet<>();
+            for (String nombreEtiqueta : dto.getEtiquetas()) {
+                Etiqueta etiqueta = etiquetaRepository.findByNombreEtiqueta(nombreEtiqueta)
+                        .orElseGet(() -> {
+                            Etiqueta nuevaEtiqueta = new Etiqueta();
+                            nuevaEtiqueta.setNombreEtiqueta(nombreEtiqueta);
+                            return etiquetaRepository.save(nuevaEtiqueta);
+                        });
+                etiquetas.add(etiqueta);
+            }
+            grupo.setEtiquetas(etiquetas);
+        } else {
+            grupo.setEtiquetas(new HashSet<>());
+        }
+
+        // Actualizar itinerarios
+        if (dto.getDiasItinerarioJson() != null && !dto.getDiasItinerarioJson().isEmpty()) {
+            try {
+                List<DiaItinerarioDTO> diasItinerario = objectMapper.readValue(
+                        dto.getDiasItinerarioJson(),
+                        new TypeReference<List<DiaItinerarioDTO>>() {
+                        });
+                dto.setDiasItinerario(diasItinerario);
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException("Error al procesar el itinerario: " + e.getMessage());
+            }
+        }
+
+        if (dto.getDiasItinerario() != null) {
+            // Limpiar itinerarios actuales antes de agregar nuevos
+            if (grupo.getItinerarios() != null) {
+                grupo.getItinerarios().clear();
+            } else {
+                grupo.setItinerarios(new HashSet<>());
+            }
+            for (DiaItinerarioDTO diaDTO : dto.getDiasItinerario()) {
+                Itinerario itinerario = new Itinerario();
+                itinerario.setDiaNumero(diaDTO.getDiaNumero());
+                itinerario.setTitulo(diaDTO.getTitulo());
+                itinerario.setDescripcion(diaDTO.getDescripcion());
+                itinerario.setPuntoPartida(diaDTO.getPuntoPartida());
+                itinerario.setPuntoLlegada(diaDTO.getPuntoLlegada());
+                itinerario.setDuracionEstimada(diaDTO.getDuracionEstimada());
+                itinerario.setGrupo(grupo);
+                grupo.getItinerarios().add(itinerario);
+            }
+        }
+
+        // Guardar grupo actualizado
+        return grupoViajeRepository.save(grupo);
+    }
+
 }

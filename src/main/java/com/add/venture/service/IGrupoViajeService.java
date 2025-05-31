@@ -64,5 +64,14 @@ public interface IGrupoViajeService {
      * @param id el ID del grupo a buscar
      * @return el grupo encontrado o null si no existe
      */
-    GrupoViaje buscarGrupoPorId(Integer id);
+    GrupoViaje buscarGrupoPorId(Long id);
+
+    /**
+     * Busca grupos de viaje por ID y lanza una excepción si no se encuentra
+     * 
+     * @param id el ID del grupo a buscar
+     * @return el grupo encontrado
+     * @throws RuntimeException si el grupo no existe
+     */
+    GrupoViaje actualizarGrupoViaje(Long idGrupo, CrearGrupoViajeDTO dto);
 }
