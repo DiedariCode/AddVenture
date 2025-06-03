@@ -77,8 +77,8 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function updateHiddenField() {
-        etiquetasHidden.value = JSON.stringify(tags);
-    }
+        etiquetasHidden.value = tags.join(', ');
+    }    
 
     // Manejo del itinerario
     const fechaInicio = document.getElementById('fechaInicio');
