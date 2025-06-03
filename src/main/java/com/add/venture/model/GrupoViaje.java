@@ -48,6 +48,9 @@ public class GrupoViaje {
     @Column(length = 20)
     private String estado = "activo";
 
+    @Column(name = "max_participantes")
+    private Integer maxParticipantes;
+
     // Relaciones
     @EqualsAndHashCode.Exclude
     @ToString.Exclude

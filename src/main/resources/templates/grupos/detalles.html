@@ -9,6 +9,8 @@
     <th:block th:replace="~{fragments/head :: head-links}"></th:block>
     <!-- Custom CSS -->
     <link rel="stylesheet" th:href="@{/css/detalle-grupo.css}">
+
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
 </head>
 
 <body>
@@ -186,10 +188,8 @@
                                                 <div>
                                                     <p class="text-muted small mb-0">Participantes</p>
                                                     <p class="fw-medium mb-0">
-                                                        <span
-                                                            th:text="${grupo.participantes != null ? grupo.participantes.size() : 0}">0</span>
-                                                        de
-                                                        <span>8</span> personas
+                                                        <span th:text="${grupo.participantes.size()}"></span> de <span
+                                                            th:text="${grupo.maxParticipantes}"></span>
                                                     </p>
                                                 </div>
                                             </div>

@@ -90,6 +90,7 @@ public class GrupoViajeServiceImpl implements IGrupoViajeService {
         grupo.setTipoGrupo(dto.getTipoGrupo());
         grupo.setFechaCreacion(LocalDateTime.now());
         grupo.setEstado("activo");
+        grupo.setMaxParticipantes(dto.getMaxParticipantes());
         grupo.setCreador(creador);
         grupo.setViaje(viaje);
 
