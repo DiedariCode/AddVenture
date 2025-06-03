@@ -1,9 +1,13 @@
 <!DOCTYPE html>
-<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layouts/layout}">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- CSRF Token -->
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
     <title>Mis Viajes - AddVenture</title>
 
     <!-- BLOQUE DE LINKS FRAGMENTS -->
@@ -16,253 +20,151 @@
 </head>
 
 <body>
-    <nav th:replace="~{fragments/navbar :: navbar}"></nav>
+    <div layout:fragment="content">
+        <nav th:replace="~{fragments/navbar :: navbar}"></nav>
 
-    <!-- Main Content -->
-    <main class="container py-5">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <div>
-                <h1 class="fw-bold mb-2">Mis Viajes</h1>
-                <p class="text-muted">Grupos de viaje a los que te has unido o has creado</p>
+        <main class="container py-5">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h1 class="fw-bold mb-2">Mis Viajes</h1>
+                    <p class="text-muted">Grupos de viaje a los que te has unido o has creado</p>
+                </div>
+                <div class="dropdown">
+                    <button class="btn btn-outline-primary dropdown-toggle" type="button" id="filterDropdown"
+                        data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="bi bi-funnel me-1"></i> Filtrar por
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="filterDropdown">
+                        <li><button class="dropdown-item active" data-filter="todos">Todos los viajes</button></li>
+                        <li><button class="dropdown-item" data-filter="activos">Viajes activos</button></li>
+                        <li><button class="dropdown-item" data-filter="completados">Viajes completados</button></li>
+                        <li><button class="dropdown-item" data-filter="organizador">Soy organizador</button></li>
+                    </ul>
+                </div>
             </div>
-            <div class="dropdown">
-                <button class="btn btn-outline-primary dropdown-toggle" type="button" id="filterDropdown"
-                    data-bs-toggle="dropdown" aria-expanded="false">
-                    <i class="bi bi-funnel me-1"></i> Filtrar por
-                </button>
-                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="filterDropdown">
-                    <li><button class="dropdown-item active" data-filter="todos">Todos los viajes</button></li>
-                    <li><button class="dropdown-item" data-filter="activos">Viajes activos</button></li>
-                    <li><button class="dropdown-item" data-filter="completados">Viajes completados</button></li>
-                    <li><button class="dropdown-item" data-filter="organizador">Soy organizador</button></li>
-                </ul>
+
+            <!-- Mensajes de alerta -->
+            <div th:if="${mensaje}" th:class="'alert alert-' + ${tipoMensaje}" role="alert">
+                <span th:text="${mensaje}"></span>
             </div>
-        </div>
 
-        <!-- Trip Cards Container -->
-        <div class="row g-4" id="tripsContainer">
-            <!-- Trip Card 1 - Active, Organizer -->
-            <div class="col-12 col-md-6 col-lg-4 trip-card" data-status="active" data-organizer="true"
-                th:each="grupo : ${grupos}">
-                <div class="card h-100 border-light hover-shadow">
-                    <div class="position-relative">
-                        <img th:if="${grupo.viaje != null && grupo.viaje.imagenDestacada != null}"
-                            th:src="${grupo.viaje.imagenDestacada}" class="card-img-top" alt="Imagen del viaje">
-                        <img th:unless="${grupo.viaje != null && grupo.viaje.imagenDestacada != null}"
-                            th:src="@{/images/default-trip.jpg}" class="card-img-top" alt="Imagen por defecto">
-                        <span class="badge bg-primary position-absolute top-0 start-0 m-2"
-                            th:if="${grupo.viaje != null && grupo.viaje.destinoPrincipal != null}">
-                            <i class="bi bi-geo-alt me-1"></i>
-                            <span th:text="${grupo.viaje.destinoPrincipal}">Destino</span>
-                        </span>
-                        <span class="badge bg-success position-absolute top-0 end-0 m-2"
-                            th:if="${grupo.viaje != null && grupo.viaje.esVerificado}">
-                            <i class="bi bi-check-circle me-1"></i>Verificado
-                        </span>
-                    </div>
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between align-items-start mb-2">
-                            <h5 class="card-title fw-bold" th:text="${grupo.nombreViaje}">Nombre del Viaje</h5>
-                            <span class="badge bg-blue-soft text-blue"
-                                th:if="${grupo.viaje != null && grupo.viaje.tipo != null}"
-                                th:text="${grupo.viaje.tipo.nombreTipo.toUpperCase()}">TIPO</span>
+            <!-- Lista de viajes -->
+            <div class="row g-4" id="tripsContainer">
+                <div th:each="grupo : ${grupos}" class="col-12 col-md-6 col-lg-4 trip-card" data-status="active" data-organizer="true"
+                    th:if="${grupo.viaje != null && grupo.viaje.imagenDestacada != null}">
+                    <div class="card h-100 border-light hover-shadow">
+                        <div class="position-relative">
+                            <img th:if="${grupo.viaje != null && grupo.viaje.imagenDestacada != null}"
+                                th:src="${grupo.viaje.imagenDestacada}" class="card-img-top" alt="Imagen del viaje">
+                            <img th:unless="${grupo.viaje != null && grupo.viaje.imagenDestacada != null}"
+                                th:src="@{/images/default-trip.jpg}" class="card-img-top" alt="Imagen por defecto">
+                            <span class="badge bg-primary position-absolute top-0 start-0 m-2"
+                                th:if="${grupo.viaje != null && grupo.viaje.destinoPrincipal != null}">
+                                <i class="bi bi-geo-alt me-1"></i>
+                                <span th:text="${grupo.viaje.destinoPrincipal}">Destino</span>
+                            </span>
+                            <span class="badge bg-success position-absolute top-0 end-0 m-2"
+                                th:if="${grupo.viaje != null && grupo.viaje.esVerificado}">
+                                <i class="bi bi-check-circle me-1"></i>Verificado
+                            </span>
                         </div>
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <h5 class="card-title fw-bold" th:text="${grupo.nombreViaje}">Nombre del Viaje</h5>
+                                <span class="badge bg-blue-soft text-blue"
+                                    th:if="${grupo.viaje != null && grupo.viaje.tipo != null}"
+                                    th:text="${grupo.viaje.tipo.nombreTipo.toUpperCase()}">TIPO</span>
+                            </div>
 
-                        <div class="d-flex align-items-center text-muted mb-2" th:if="${grupo.viaje != null}">
-                            <i class="bi bi-calendar me-2 text-primary"></i>
-                            <small>
-                                <span class="fw-medium">Inicio:</span>
-                                <span th:text="${#temporals.format(grupo.viaje.fechaInicio, 'dd MMM yyyy')}">Fecha
-                                    Inicio</span> •
-                                <span class="fw-medium">Fin:</span>
-                                <span th:text="${#temporals.format(grupo.viaje.fechaFin, 'dd MMM yyyy')}">Fecha
-                                    Fin</span>
-                            </small>
-                        </div>
+                            <div class="d-flex align-items-center text-muted mb-2" th:if="${grupo.viaje != null}">
+                                <i class="bi bi-calendar me-2 text-primary"></i>
+                                <small>
+                                    <span class="fw-medium">Inicio:</span>
+                                    <span th:text="${#temporals.format(grupo.viaje.fechaInicio, 'dd MMM yyyy')}">Fecha
+                                        Inicio</span> •
+                                    <span class="fw-medium">Fin:</span>
+                                    <span th:text="${#temporals.format(grupo.viaje.fechaFin, 'dd MMM yyyy')}">Fecha
+                                        Fin</span>
+                                </small>
+                            </div>
 
-                        <div class="d-flex align-items-center text-muted mb-2">
-                            <i class="bi bi-people me-2 text-primary"></i>
-                            <small>
-                                <span class="fw-medium">Participantes:</span>
-                                <span
-                                    th:text="${grupo.participantes != null ? grupo.participantes.size() : 0}">0</span>/
-                                <span>8</span> •
-                                <span class="fw-medium">Edad:</span>
-                                <span th:if="${grupo.viaje != null}">
+                            <div class="d-flex align-items-center text-muted mb-2">
+                                <i class="bi bi-people me-2 text-primary"></i>
+                                <small>
+                                    <span class="fw-medium">Participantes:</span>
                                     <span
-                                        th:text="${grupo.viaje.rangoEdadMin != null ? grupo.viaje.rangoEdadMin : '18'}">18</span>-
-                                    <span
-                                        th:text="${grupo.viaje.rangoEdadMax != null ? grupo.viaje.rangoEdadMax : '60'}">60</span>
-                                </span>
-                                <span th:unless="${grupo.viaje != null}">Todas las edades</span>
-                            </small>
-                        </div>
+                                        th:text="${grupo.participantes != null ? grupo.participantes.size() : 0}">0</span>/
+                                    <span>8</span> •
+                                    <span class="fw-medium">Edad:</span>
+                                    <span th:if="${grupo.viaje != null}">
+                                        <span
+                                            th:text="${grupo.viaje.rangoEdadMin != null ? grupo.viaje.rangoEdadMin : '18'}">18</span>-
+                                        <span
+                                            th:text="${grupo.viaje.rangoEdadMax != null ? grupo.viaje.rangoEdadMax : '60'}">60</span>
+                                    </span>
+                                    <span th:unless="${grupo.viaje != null}">Todas las edades</span>
+                                </small>
+                            </div>
 
-                        <p class="card-text text-muted small mb-3" th:if="${grupo.viaje != null}"
-                            th:text="${#strings.abbreviate(grupo.viaje.descripcion, 100)}">
-                            Descripción del viaje...
-                        </p>
+                            <p class="card-text text-muted small mb-3" th:if="${grupo.viaje != null}"
+                                th:text="${#strings.abbreviate(grupo.viaje.descripcion, 100)}">
+                                Descripción del viaje...
+                            </p>
 
-                        <div class="d-flex mb-3"
-                            th:if="${grupo.participantes != null && !grupo.participantes.isEmpty()}">
-                            <div class="avatar-group">
-                                <div class="avatar-circle bg-primary text-white">
-                                    <span th:text="${grupo.creador.iniciales}">CR</span>
-                                </div>
-                                <!-- Mostrar hasta 3 participantes más -->
-                                <th:block th:each="participante, iterStat : ${grupo.participantes}"
-                                    th:if="${iterStat.index < 3 && participante.usuario != grupo.creador}">
-                                    <div class="avatar-circle bg-light">
-                                        <span th:text="${participante.usuario.iniciales}">U1</span>
+                            <div class="d-flex mb-3"
+                                th:if="${grupo.participantes != null && !grupo.participantes.isEmpty()}">
+                                <div class="avatar-group">
+                                    <div class="avatar-circle bg-primary text-white">
+                                        <span th:text="${grupo.creador.iniciales}">CR</span>
                                     </div>
-                                </th:block>
-                                <!-- Mostrar +X si hay más participantes -->
-                                <div class="avatar-circle bg-primary-soft text-primary"
-                                    th:if="${grupo.participantes.size() > 4}">
-                                    <span th:text="${'+' + (grupo.participantes.size() - 4)}">+X</span>
+                                    <!-- Mostrar hasta 3 participantes más -->
+                                    <th:block th:each="participante, iterStat : ${grupo.participantes}"
+                                        th:if="${iterStat.index < 3 && participante.usuario != grupo.creador}">
+                                        <div class="avatar-circle bg-light">
+                                            <span th:text="${participante.usuario.iniciales}">U1</span>
+                                        </div>
+                                    </th:block>
+                                    <!-- Mostrar +X si hay más participantes -->
+                                    <div class="avatar-circle bg-primary-soft text-primary"
+                                        th:if="${grupo.participantes.size() > 4}">
+                                        <span th:text="${'+' + (grupo.participantes.size() - 4)}">+X</span>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
 
-                        <div class="d-flex flex-wrap gap-1 mb-3"
-                            th:if="${grupo.etiquetas != null && !grupo.etiquetas.isEmpty()}">
-                            <span class="badge bg-light text-dark" th:each="etiqueta : ${grupo.etiquetas}"
-                                th:text="${etiqueta.nombreEtiqueta}">Etiqueta</span>
-                        </div>
-
-                        <!-- Tipo de grupo (solo mujeres, solo hombres) -->
-                        <div class="d-flex flex-wrap gap-1 mb-3"
-                            th:if="${grupo.tipoGrupo != null && grupo.tipoGrupo != 'Mixto'}">
-                            <span class="badge bg-purple-soft text-purple"
-                                th:if="${grupo.tipoGrupo == 'Solo Mujeres'}">Solo mujeres</span>
-                            <span class="badge bg-blue-soft text-blue" th:if="${grupo.tipoGrupo == 'Solo Hombres'}">Solo
-                                hombres</span>
-                        </div>
-
-                        <div class="d-flex gap-2">
-                            <a th:href="@{/grupos/{id}(id=${grupo.idGrupo})}" class="btn btn-primary flex-grow-1">Ver
-                                chat</a>
-                            <a th:href="@{/grupos/editar/{id}(id=${grupo.idGrupo})}"
-                                class="btn btn-outline-primary flex-grow-1">Administrar</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Trip Card 2 - Active, Not Organizer -->
-            <div class="col-12 col-md-6 col-lg-4 trip-card" data-status="active" data-organizer="false">
-                <div class="card h-100 border hover-shadow">
-                    <div class="position-relative">
-                        <img src="img/riviera-maya.jpg" class="card-img-top" alt="Riviera Maya, México"
-                            style="height: 200px; object-fit: cover;">
-                        <span class="position-absolute top-0 start-0 m-2 badge bg-primary rounded-pill">
-                            <i class="bi bi-geo-alt me-1"></i> México
-                        </span>
-                    </div>
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between align-items-start mb-2">
-                            <h3 class="card-title fw-bold">Riviera Maya</h3>
-                            <span class="badge bg-primary-subtle text-primary">PLAYA</span>
-                        </div>
-
-                        <!-- Fechas -->
-                        <div class="d-flex align-items-center text-muted mb-3">
-                            <i class="bi bi-calendar3 text-primary me-2"></i>
-                            <div>
-                                <span class="fw-medium">Inicio:</span> 5 Sep 2025 •
-                                <span class="fw-medium">Fin:</span> 13 Sep 2025
+                            <div class="d-flex flex-wrap gap-1 mb-3"
+                                th:if="${grupo.etiquetas != null && !grupo.etiquetas.isEmpty()}">
+                                <span class="badge bg-light text-dark" th:each="etiqueta : ${grupo.etiquetas}"
+                                    th:text="${etiqueta.nombreEtiqueta}">Etiqueta</span>
                             </div>
-                        </div>
 
-                        <!-- Participantes -->
-                        <div class="d-flex align-items-center text-muted mb-3">
-                            <i class="bi bi-people text-primary me-2"></i>
-                            <div>
-                                <span class="fw-medium">Participantes:</span> 8/12
+                            <!-- Tipo de grupo (solo mujeres, solo hombres) -->
+                            <div class="d-flex flex-wrap gap-1 mb-3"
+                                th:if="${grupo.tipoGrupo != null && grupo.tipoGrupo != 'Mixto'}">
+                                <span class="badge bg-purple-soft text-purple"
+                                    th:if="${grupo.tipoGrupo == 'Solo Mujeres'}">Solo mujeres</span>
+                                <span class="badge bg-blue-soft text-blue" th:if="${grupo.tipoGrupo == 'Solo Hombres'}">Solo
+                                    hombres</span>
                             </div>
-                        </div>
 
-                        <!-- Miembros -->
-                        <div class="d-flex mb-3">
-                            <div class="avatar-circle bg-primary text-white border border-2 border-white">
-                                <span>OR</span>
+                            <div class="d-flex justify-content-between align-items-center mt-3">
+                                <div class="btn-group">
+                                    <!-- Botón Ver Detalles -->
+                                    <a th:href="@{/grupos/{id}(id=${grupo.idGrupo})}" class="btn btn-outline-primary">
+                                        <i class="fas fa-eye"></i> Ver
+                                    </a>
+                                    <!-- Botón Editar -->
+                                    <a th:href="@{/grupos/editar/{id}(id=${grupo.idGrupo})}" class="btn btn-outline-warning">
+                                        <i class="fas fa-edit"></i> Editar
+                                    </a>
+                                    <!-- Botón Eliminar -->
+                                    <button type="button" class="btn btn-outline-danger" 
+                                            th:data-grupo-id="${grupo.idGrupo}"
+                                            onclick="confirmarEliminacion(this.getAttribute('data-grupo-id'))">
+                                        <i class="fas fa-trash"></i> Eliminar
+                                    </button>
+                                </div>
                             </div>
-                            <div class="avatar-circle bg-light text-dark border border-2 border-white"
-                                style="margin-left: -10px;">
-                                <span>U2</span>
-                            </div>
-                            <div class="avatar-circle bg-light text-dark border border-2 border-white"
-                                style="margin-left: -10px;">
-                                <span>U3</span>
-                            </div>
-                            <div class="avatar-circle bg-primary-subtle text-primary border border-2 border-white"
-                                style="margin-left: -10px;">
-                                <span>+5</span>
-                            </div>
-                        </div>
-
-                        <div class="d-flex gap-2">
-                            <a href="#" class="btn btn-primary w-100">Ver chat</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Trip Card 3 - Completed, Not Organizer -->
-            <div class="col-12 col-md-6 col-lg-4 trip-card" data-status="completed" data-organizer="false">
-                <div class="card h-100 border hover-shadow">
-                    <div class="position-relative">
-                        <img src="img/san-pedro-atacama.jpg" class="card-img-top" alt="San Pedro de Atacama, Chile"
-                            style="height: 200px; object-fit: cover;">
-                        <span class="position-absolute top-0 start-0 m-2 badge bg-primary rounded-pill">
-                            <i class="bi bi-geo-alt me-1"></i> Chile
-                        </span>
-                        <!-- Overlay for completed trips -->
-                        <div
-                            class="position-absolute top-0 start-0 w-100 h-100 bg-dark bg-opacity-50 d-flex align-items-center justify-content-center">
-                            <span class="badge bg-dark fs-6 py-2 px-3">Completado</span>
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between align-items-start mb-2">
-                            <h3 class="card-title fw-bold">San Pedro de Atacama</h3>
-                            <span class="badge bg-success-subtle text-success">ECOTURISMO</span>
-                        </div>
-
-                        <!-- Fechas -->
-                        <div class="d-flex align-items-center text-muted mb-3">
-                            <i class="bi bi-calendar3 text-primary me-2"></i>
-                            <div>
-                                <span class="fw-medium">Inicio:</span> 15 Nov 2025 •
-                                <span class="fw-medium">Fin:</span> 21 Nov 2025
-                            </div>
-                        </div>
-
-                        <!-- Participantes -->
-                        <div class="d-flex align-items-center text-muted mb-3">
-                            <i class="bi bi-people text-primary me-2"></i>
-                            <div>
-                                <span class="fw-medium">Participantes:</span> 3/6
-                            </div>
-                        </div>
-
-                        <!-- Miembros -->
-                        <div class="d-flex mb-3">
-                            <div class="avatar-circle bg-primary text-white border border-2 border-white">
-                                <span>OR</span>
-                            </div>
-                            <div class="avatar-circle bg-light text-dark border border-2 border-white"
-                                style="margin-left: -10px;">
-                                <span>U2</span>
-                            </div>
-                            <div class="avatar-circle bg-light text-dark border border-2 border-white"
-                                style="margin-left: -10px;">
-                                <span>U3</span>
-                            </div>
-                        </div>
-
-                        <div class="d-flex gap-2">
-                            <a href="#" class="btn btn-outline-primary w-100">Ver recuerdos</a>
                         </div>
                     </div>
                 </div>
@@ -280,13 +182,162 @@
                 </p>
                 <a href="buscar-grupos.html" class="btn btn-primary">Buscar grupos</a>
             </div>
-        </div>
-    </main>
+        </main>
 
-    <footer th:replace="~{fragments/footer :: footer}"></footer>
+        <footer th:replace="~{fragments/footer :: footer}"></footer>
+    </div>
+
+    <!-- Modal de Confirmación para Eliminar -->
+    <div class="modal fade" id="eliminarModal" tabindex="-1" aria-labelledby="eliminarModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="eliminarModalLabel">Confirmar Eliminación</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>¿Estás seguro de que deseas eliminar este viaje? Esta acción no se puede deshacer.</p>
+                    <p class="text-danger"><strong>Nota:</strong> Se eliminarán todos los datos asociados al viaje, incluyendo:</p>
+                    <ul>
+                        <li>Información del grupo</li>
+                        <li>Itinerario</li>
+                        <li>Participantes</li>
+                        <li>Mensajes del grupo</li>
+                    </ul>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-danger" id="confirmarEliminacion">
+                        <i class="fas fa-trash me-1"></i>Eliminar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Expulsión -->
+    <div class="modal fade" id="expulsarModal" tabindex="-1" aria-labelledby="expulsarModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="expulsarModalLabel">Expulsar Participante</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="expulsarForm">
+                        <div class="mb-3">
+                            <label for="expulsionReason" class="form-label">Razón de expulsión *</label>
+                            <select class="form-select" id="expulsionReason" required>
+                                <option value="">Selecciona una razón</option>
+                                <option value="COMPORTAMIENTO_INAPROPIADO">Comportamiento inapropiado</option>
+                                <option value="INACTIVIDAD">Inactividad</option>
+                                <option value="SOLICITUD_PROPIA">Solicitud propia</option>
+                                <option value="OTRO">Otro</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="expulsionComment" class="form-label">Comentario adicional</label>
+                            <textarea class="form-control" id="expulsionComment" rows="3"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-danger" id="confirmarExpulsion">Expulsar</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Bootstrap JS Bundle with Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Scripts -->
+    <script>
+        let grupoIdToDelete = null;
+        const modal = new bootstrap.Modal(document.getElementById('eliminarModal'));
+
+        function confirmarEliminacion(grupoId) {
+            grupoIdToDelete = grupoId;
+            modal.show();
+        }
+
+        document.getElementById('confirmarEliminacion').addEventListener('click', function() {
+            if (!grupoIdToDelete) return;
+
+            // Obtener el token CSRF
+            const token = document.querySelector('meta[name="_csrf"]').content;
+            const header = document.querySelector('meta[name="_csrf_header"]').content;
+
+            // Realizar la petición DELETE
+            fetch(`/grupos/${grupoIdToDelete}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    [header]: token
+                }
+            })
+            .then(response => {
+                if (response.ok) {
+                    // Éxito: recargar la página
+                    window.location.reload();
+                } else {
+                    // Error: mostrar mensaje
+                    return response.text().then(text => {
+                        throw new Error(text || 'Error al eliminar el grupo');
+                    });
+                }
+            })
+            .catch(error => {
+                alert('Error: ' + error.message);
+            })
+            .finally(() => {
+                modal.hide();
+                grupoIdToDelete = null;
+            });
+        });
+
+        function expulsarParticipante(grupoId, userId) {
+            participanteData = { grupoId, userId };
+            const modal = new bootstrap.Modal(document.getElementById('expulsarModal'));
+            modal.show();
+        }
+
+        document.getElementById('confirmarExpulsion').addEventListener('click', function() {
+            if (participanteData) {
+                const reason = document.getElementById('expulsionReason').value;
+                const comment = document.getElementById('expulsionComment').value;
+
+                if (!reason) {
+                    alert('Por favor selecciona una razón de expulsión');
+                    return;
+                }
+
+                fetch(`/grupos/${participanteData.grupoId}/expulsar`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="_csrf"]').content
+                    },
+                    body: JSON.stringify({
+                        userId: participanteData.userId,
+                        expulsionReason: reason,
+                        expulsionComment: comment
+                    })
+                })
+                .then(response => {
+                    if (response.ok) {
+                        window.location.reload();
+                    } else {
+                        throw new Error('Error al expulsar al participante');
+                    }
+                })
+                .catch(error => {
+                    alert('Error: ' + error.message);
+                });
+            }
+        });
+    </script>
 </body>
 
 </html>

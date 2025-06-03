@@ -3,14 +3,18 @@ package com.add.venture.controller;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,10 +32,12 @@ import com.add.venture.model.MensajeGrupo;
 import com.add.venture.model.ParticipanteGrupo;
 import com.add.venture.model.ParticipanteGrupo.EstadoSolicitud;
 import com.add.venture.model.Usuario;
+import com.add.venture.model.Viaje;
 import com.add.venture.repository.GrupoViajeRepository;
 import com.add.venture.repository.MensajeGrupoRepository;
 import com.add.venture.repository.ParticipanteGrupoRepository;
 import com.add.venture.repository.UsuarioRepository;
+import com.add.venture.repository.ViajeRepository;
 import com.add.venture.service.IGrupoViajeService;
 
 import jakarta.validation.Valid;
@@ -57,6 +63,9 @@ public class GrupoViajeController {
 
     @Autowired
     private IGrupoViajeService grupoViajeService;
+
+    @Autowired
+    private ViajeRepository viajeRepository;
 
     @GetMapping
     public String listarGrupos(
@@ -338,9 +347,31 @@ public class GrupoViajeController {
 
         // Convertir entidad a DTO
         CrearGrupoViajeDTO dto = new CrearGrupoViajeDTO();
+        dto.setNombreViaje(grupo.getNombreViaje());
+        dto.setTipoGrupo(grupo.getTipoGrupo());
+        
+        if (grupo.getViaje() != null) {
+            dto.setDestinoPrincipal(grupo.getViaje().getDestinoPrincipal());
+            dto.setFechaInicio(grupo.getViaje().getFechaInicio());
+            dto.setFechaFin(grupo.getViaje().getFechaFin());
+            dto.setDescripcion(grupo.getViaje().getDescripcion());
+            dto.setPuntoEncuentro(grupo.getViaje().getPuntoEncuentro());
+            dto.setImagenDestacada(grupo.getViaje().getImagenDestacada());
+            dto.setRangoEdadMin(grupo.getViaje().getRangoEdadMin());
+            dto.setRangoEdadMax(grupo.getViaje().getRangoEdadMax());
+            if (grupo.getViaje().getTipo() != null) {
+                dto.setIdTipoViaje(grupo.getViaje().getTipo().getIdTipo());
+            }
+        }
 
+        if (grupo.getEtiquetas() != null) {
+            dto.setEtiquetas(grupo.getEtiquetas().stream()
+                    .map(etiqueta -> etiqueta.getNombreEtiqueta())
+                    .collect(Collectors.toList()));
+        }
 
         model.addAttribute("datosViaje", dto);
+        model.addAttribute("grupo", grupo); // Necesario para el ID en el formulario
         model.addAttribute("tiposViaje", grupoViajeService.obtenerTiposViaje());
 
         return "grupos/editar-grupo";
@@ -348,7 +379,7 @@ public class GrupoViajeController {
 
     @PostMapping("/editar/{id}")
     public String actualizarGrupo(@PathVariable("id") Long idGrupo,
-            @Valid @ModelAttribute GrupoViaje grupo,
+            @Valid @ModelAttribute("datosViaje") CrearGrupoViajeDTO dto,
             BindingResult result,
             Model model,
             RedirectAttributes redirectAttributes) {
@@ -361,26 +392,59 @@ public class GrupoViajeController {
             return "grupos/editar-grupo";
         }
 
-        // Usuario autenticado
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        try {
+            // Actualizar el grupo usando el servicio
+            grupoViajeService.actualizarGrupoViaje(idGrupo, dto);
+            redirectAttributes.addFlashAttribute("mensaje", "Grupo actualizado exitosamente");
+            redirectAttributes.addFlashAttribute("tipoMensaje", "success");
+            return "redirect:/grupos/mis-viajes";
+        } catch (AccessDeniedException e) {
+            redirectAttributes.addFlashAttribute("mensaje", "No tienes permiso para editar este grupo");
+            redirectAttributes.addFlashAttribute("tipoMensaje", "danger");
+            return "redirect:/grupos/mis-viajes";
+        } catch (Exception e) {
+            model.addAttribute("error", "Error al actualizar el grupo: " + e.getMessage());
+            usuarioAutenticadoHelper.cargarDatosUsuarioParaNavbar(model);
+            usuarioAutenticadoHelper.cargarUsuarioParaPerfil(model);
+            model.addAttribute("tiposViaje", grupoViajeService.obtenerTiposViaje());
+            return "grupos/editar-grupo";
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseBody
+    public ResponseEntity<?> eliminarGrupo(@PathVariable("id") Long idGrupo) {
+        // Obtener el usuario autenticado
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth == null || !auth.isAuthenticated() || auth.getName().equals("anonymousUser")) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Usuario no autenticado");
+        }
+
+        String email = auth.getName();
         Usuario usuario = usuarioRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
-        // Verificar permisos
-        GrupoViaje grupoExistente = grupoViajeRepository.findById(idGrupo)
+        // Obtener el grupo
+        GrupoViaje grupo = grupoViajeRepository.findById(idGrupo)
                 .orElseThrow(() -> new RuntimeException("Grupo no encontrado"));
 
-        if (!grupoExistente.getCreador().getIdUsuario().equals(usuario.getIdUsuario())) {
-            throw new AccessDeniedException("No tienes permiso para editar este grupo");
+        // Verificar que el usuario autenticado sea el creador del grupo
+        if (!grupo.getCreador().equals(usuario)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Solo el creador puede eliminar el grupo");
         }
 
-        // Actualizar grupo
-        grupo.setIdGrupo(idGrupo);
-        grupo.setCreador(usuario);
-        grupoViajeRepository.save(grupo);
-
-        redirectAttributes.addFlashAttribute("success", "Grupo actualizado exitosamente");
-        return "redirect:/grupos/" + idGrupo;
+        try {
+            // Eliminar el grupo y su viaje asociado
+            Viaje viaje = grupo.getViaje();
+            if (viaje != null) {
+                viajeRepository.delete(viaje);
+            }
+            grupoViajeRepository.delete(grupo);
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error al eliminar el grupo: " + e.getMessage());
+        }
     }
 
 }
